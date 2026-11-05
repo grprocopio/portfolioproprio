@@ -69,7 +69,7 @@ export function FormProjeto({ desativado }: { desativado: boolean }) {
 
       <div className="flex flex-col gap-2">
         <label htmlFor="nome" className="text-sm font-medium uppercase tracking-widest text-claro">
-          Nome do projeto <span className="font-light normal-case tracking-normal text-claro/50">(opcional)</span>
+          Nome do projeto <span className="font-light normal-case tracking-normal text-claro/70">(opcional)</span>
         </label>
         <input id="nome" name="nome" type="text" maxLength={80} autoComplete="off" placeholder="Usa o nome do link se ficar vazio" disabled={desativado} className={campo} />
       </div>

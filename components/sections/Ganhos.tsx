@@ -45,7 +45,7 @@ export async function Ganhos() {
       <div id="projetos" className="mx-auto mt-20 max-w-6xl scroll-mt-10 md:mt-28">
         {erro && <p className="rounded-3xl border-2 border-[#ff8fa6]/40 p-6 text-center text-claro">Não consegui ler os projetos agora. Recarregue a página em alguns segundos.</p>}
         {!erro && ganhos.length === 0 && (
-          <p className="rounded-[40px] border-2 border-dashed border-claro/25 px-6 py-16 text-center font-light text-claro/70">
+          <p className="rounded-[40px] border-2 border-dashed border-claro/25 bg-fundo/70 px-6 py-16 text-center font-light text-claro/80">
             Nenhum projeto ainda. Adicione o primeiro logo abaixo e ele aparece aqui com o print do site.
           </p>
         )}
@@ -88,14 +88,14 @@ export async function Ganhos() {
           Adicionar projeto
         </FadeIn>
         {!configurado && (
-          <div className="mb-8 rounded-3xl border-2 border-claro/25 p-6 text-sm font-light leading-relaxed text-claro">
+          <div className="mb-8 rounded-3xl border-2 border-claro/25 bg-fundo/85 p-6 text-sm font-light leading-relaxed text-claro">
             <p className="font-medium text-white">Falta ativar o banco onde os projetos ficam guardados.</p>
             <p className="mt-2">
               Na Vercel: abra o projeto, vá em <strong className="font-medium text-white">Storage</strong>, crie um banco <strong className="font-medium text-white">Upstash Redis</strong> (gratuito) e conecte a este projeto. Depois faça um novo deploy.
             </p>
           </div>
         )}
-        <div className="rounded-[40px] border-2 border-claro/80 p-6 sm:p-10">
+        <div className="rounded-[40px] border-2 border-claro/80 bg-fundo/85 p-6 sm:p-10">
           <FormProjeto desativado={!configurado} />
         </div>
       </div>
