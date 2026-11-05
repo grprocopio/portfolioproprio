@@ -1,3 +1,4 @@
+import { CeuNoturno } from "@/components/CeuNoturno";
 import { Rodape } from "@/components/Rodape";
 import { RolagemSuave } from "@/components/RolagemSuave";
 import { Ganhos } from "@/components/sections/Ganhos";
@@ -10,11 +11,14 @@ export default function Home() {
   return (
     <div style={{ overflowX: "clip" }}>
       <RolagemSuave />
-      <main id="conteudo">
+      <CeuNoturno />
+      <main id="conteudo" className="relative z-10">
         <Hero />
         <Ganhos />
       </main>
-      <Rodape />
+      <div className="relative z-10">
+        <Rodape />
+      </div>
     </div>
   );
 }

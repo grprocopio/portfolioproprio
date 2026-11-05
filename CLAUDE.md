@@ -22,6 +22,7 @@ Portfólio pessoal de desenvolvedor freelancer. Mostra os sites/projetos que ven
 - **Fonte:** Kanit (300 a 900).
 - **Personagem:** `public/personagem.webp` (personagem 3D do Procopio, gerado pelo usuário a partir da foto dele, fundo removido) no hero, com efeito magnético.
 - **Sem partículas e sem PROCOPIO girando** (escolha do usuário).
+- **Céu noturno atrás do site:** nuvens escuras deslizando e pontinhos de luz subindo (adaptado do céu do prompt "Driftlab", em versão noite).
 - **Animações:** Framer Motion (`motion`) + Lenis. Sempre ligadas (ver decisões).
 
 ## Seções
@@ -69,3 +70,4 @@ Estados de carregamento e erro (se uma API falhar, o resto do site continua func
 - **2026-11-05 — Site reduzido a hero + ganhos (pedido do usuário):** saíram faixa, Sobre, Serviços, cartões empilhados, projetos do GitHub e `data/projetos.json` de exemplo. Projetos entram pelo formulário do próprio site (link da Vercel + valor da venda) e ficam no Upstash Redis, em qualquer aparelho.
 - **2026-11-05 — Instagram:** @guiprocopioo (https://www.instagram.com/guiprocopioo/), no rodapé com o ícone do Phosphor.
 - **2026-11-05 — Título do hero:** só "PROCOPIO" (pedido do usuário). Duas camadas sobrepostas com a mesma caixa: atrás do personagem, PRO e PIO brancos; na frente, só o CO em contorno branco (`.contorno-branco`). No celular o personagem sobe (topo a 7svh, 320 px) para a cabeça cruzar o CO.
+- **2026-11-05 — Céu noturno (pedido do usuário, do prompt "Driftlab", só as nuvens atrás do site, escuras como à noite):** `components/CeuNoturno.tsx`, fixo atrás de tudo. Nuvens: textura própria `public/ceu-noite.webp` (2048×1152, 15 KB, gerada por ruído espectral periódico, então emenda nas laterais; a imagem do prompt era de terceiros e de dia), deslizando `rolagem*.05 + tempo*.0022` voltas, como no prompt. 30 pontinhos de luz brancos subindo `.012*(.4+z)`. Só `transform` (sem WebGL, sem canvas): medido 60 fps no computador e no celular. Água-viva, palavras curvas, som e índice do prompt ficaram de fora.
