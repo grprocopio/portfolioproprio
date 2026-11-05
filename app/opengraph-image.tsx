@@ -12,7 +12,7 @@ export default function Imagem() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#050816",
+          background: "#0c0c0c",
           color: "#fff",
           display: "flex",
           flexDirection: "column",
@@ -23,10 +23,10 @@ export default function Imagem() {
       >
         <div style={{ fontSize: 96, display: "flex", gap: 24 }}>
           <span>Sites que</span>
-          <span style={{ color: "#8f9bff" }}>geram</span>
+          <span style={{ color: "#bbccd7" }}>geram</span>
           <span>resultado.</span>
         </div>
-        <div style={{ fontSize: 32, color: "#8f9bff", marginTop: 32, fontFamily: "sans-serif" }}>{site.nome}</div>
+        <div style={{ fontSize: 32, color: "#bbccd7", marginTop: 32, fontFamily: "sans-serif" }}>{site.nome}</div>
       </div>
     ),
     size,

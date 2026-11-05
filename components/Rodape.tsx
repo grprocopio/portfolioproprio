@@ -1,60 +1,51 @@
-import { PalavraGiratoria } from "@/components/PalavraGiratoria";
 import { linkWhatsapp, redesAtivas, site } from "@/data/site";
 
 export function Rodape() {
   const ano = new Date().getFullYear();
   return (
-    <footer className="relative z-10 overflow-hidden bg-fundo px-4 pb-32 pt-24 md:px-8">
-      <div aria-hidden="true" className="feixe left-1/2 -translate-x-1/2" />
-      <div className="relative mx-auto max-w-7xl">
-        {/* O nome girando fecha a página (antes ficava no topo) */}
-        <div className="flex justify-center">
-          <PalavraGiratoria palavra="Procopio" />
+    <footer className="border-t border-linha px-5 pb-10 pt-16 sm:px-8 md:px-10">
+      <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-12">
+        <div className="md:col-span-6">
+          <p className="hero-heading text-5xl font-black uppercase leading-none tracking-tight">Procopio</p>
+          <p className="mt-4 max-w-sm text-sm font-light text-claro/70">{site.descricao}</p>
         </div>
-
-        <div className="mt-24 grid gap-12 md:grid-cols-12">
-          <div className="md:col-span-6">
-            <p className="text-2xl font-semibold tracking-tight text-forte">{site.nome}</p>
-            <p className="mt-4 max-w-sm text-sm text-apagado">{site.descricao}</p>
-          </div>
-          <nav aria-label="Contato" className="md:col-span-3">
-            <h2 className="etiqueta">Contato</h2>
-            <ul className="mt-4 space-y-2 text-sm">
+        <nav aria-label="Contato" className="md:col-span-3">
+          <h2 className="text-xs font-medium uppercase tracking-widest text-claro/60">Contato</h2>
+          <ul className="mt-4 space-y-2 text-sm">
+            <li>
+              <a href={linkWhatsapp} target="_blank" rel="noopener noreferrer" className="text-claro transition-opacity duration-200 hover:opacity-70">
+                WhatsApp
+              </a>
+            </li>
+            {site.email && (
               <li>
-                <a href={linkWhatsapp} target="_blank" rel="noopener noreferrer" className="text-texto transition duration-300 ease-suave hover:text-forte">
-                  WhatsApp
+                <a href={`mailto:${site.email}`} className="text-claro transition-opacity duration-200 hover:opacity-70">
+                  {site.email}
                 </a>
               </li>
-              {site.email && (
-                <li>
-                  <a href={`mailto:${site.email}`} className="text-texto transition duration-300 ease-suave hover:text-forte">
-                    {site.email}
-                  </a>
-                </li>
-              )}
-            </ul>
-          </nav>
-          <nav aria-label="Redes" className="md:col-span-3">
-            <h2 className="etiqueta">Redes</h2>
-            <ul className="mt-4 space-y-2 text-sm">
-              {redesAtivas.map((r) => (
-                <li key={r.nome}>
-                  <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-texto transition duration-300 ease-suave hover:text-forte">
-                    {r.nome}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-        <div className="mt-16 flex flex-col gap-2 border-t border-borda pt-6 text-xs text-apagado sm:flex-row sm:justify-between">
-          <p>
-            © {ano} {site.nome}
-          </p>
-          <a href="/privacidade" className="transition duration-300 ease-suave hover:text-forte">
-            Política de privacidade
-          </a>
-        </div>
+            )}
+          </ul>
+        </nav>
+        <nav aria-label="Redes" className="md:col-span-3">
+          <h2 className="text-xs font-medium uppercase tracking-widest text-claro/60">Redes</h2>
+          <ul className="mt-4 space-y-2 text-sm">
+            {redesAtivas.map((r) => (
+              <li key={r.nome}>
+                <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-claro transition-opacity duration-200 hover:opacity-70">
+                  {r.nome}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+      <div className="mx-auto mt-16 flex max-w-6xl flex-col gap-2 border-t border-linha pt-6 text-xs text-claro/60 sm:flex-row sm:justify-between">
+        <p>
+          © {ano} {site.nome}
+        </p>
+        <a href="/privacidade" className="transition-opacity duration-200 hover:opacity-70">
+          Política de privacidade
+        </a>
       </div>
     </footer>
   );

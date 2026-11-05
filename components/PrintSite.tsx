@@ -8,9 +8,9 @@ export function PrintSite({ link, nome }: { link?: string; nome: string }) {
   const [falhou, setFalhou] = useState(false);
   if (!link || falhou) {
     return (
-      <div aria-hidden="true" className="relative grid h-full w-full place-items-center overflow-hidden bg-[#081030]">
-        <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent_0,transparent_11px,rgb(143_155_255/0.06)_11px,rgb(143_155_255/0.06)_12px)]" />
-        <span className="titulo relative px-6 text-center text-3xl text-[#c9d1f2] font-sans font-semibold tracking-tight">{nome}</span>
+      <div aria-hidden="true" className="relative grid h-full w-full place-items-center overflow-hidden bg-[linear-gradient(160deg,#1b1b1f,#0f0f11)]">
+        <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent_0,transparent_11px,rgb(215_226_234/0.04)_11px,rgb(215_226_234/0.04)_12px)]" />
+        <span className="titulo relative px-4 text-center text-lg sm:text-3xl hero-heading font-black uppercase leading-none tracking-tight">{nome}</span>
       </div>
     );
   }

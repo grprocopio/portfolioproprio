@@ -1,39 +1,30 @@
-import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import type { ReactNode } from "react";
+import { linkWhatsapp } from "@/data/site";
 
-type Props = {
-  href: string;
-  children: ReactNode;
-  variante?: "primario" | "secundario";
-  tamanho?: "normal" | "pequeno";
-  externo?: boolean;
-  className?: string;
-};
-
-const base =
-  "group inline-flex items-center gap-3 rounded-full font-semibold transition duration-300 ease-suave active:scale-[0.98] select-none";
-
-export function Botao({ href, children, variante = "primario", tamanho = "normal", externo, className = "" }: Props) {
-  const texto = tamanho === "pequeno" ? "text-sm" : "text-base";
-  const estilo =
-    variante === "primario"
-      ? "bg-white text-fundo shadow-[0_0_32px_rgb(75_91_255/0.35)] hover:bg-[#e6e9ff] hover:shadow-[0_0_44px_rgb(75_91_255/0.55)] py-2 pl-4 pr-2"
-      : "border border-borda-forte bg-superficie/80 text-forte hover:border-destaque hover:bg-superficie-2 py-2 px-4";
-  const alvo = externo ? { target: "_blank", rel: "noopener noreferrer" } : {};
+/** Botão principal do template: pílula em degradê roxo/laranja. Abre o WhatsApp. */
+export function BotaoContato({ children = "Fale comigo", className = "" }: { children?: ReactNode; className?: string }) {
   return (
-    <a href={href} className={`${base} ${texto} ${estilo} ${className}`} {...alvo}>
-      <span>{children}</span>
-      {variante === "primario" && (
-        <span
-          aria-hidden="true"
-          className={`grid place-items-center rounded-full bg-destaque text-white shadow-[0_0_12px_rgb(75_91_255/0.9)] ${tamanho === "pequeno" ? "size-6" : "size-8"}`}
-        >
-          <ArrowRightIcon
-            weight="bold"
-            className="size-4 transition-transform duration-500 ease-suave group-hover:translate-x-0.5"
-          />
-        </span>
-      )}
+    <a
+      href={linkWhatsapp}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`botao-contato inline-block rounded-full px-8 py-3 text-xs font-medium uppercase tracking-widest text-white transition-transform duration-300 hover:scale-[1.03] active:scale-[0.98] sm:px-10 sm:py-3.5 sm:text-sm md:px-12 md:py-4 md:text-base ${className}`}
+    >
+      {children}
+    </a>
+  );
+}
+
+/** Botão vazado do template (projetos). */
+export function BotaoProjeto({ href, children = "Ver site no ar" }: { href: string; children?: ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-block shrink-0 rounded-full border-2 border-claro px-8 py-3 text-sm font-medium uppercase tracking-widest text-claro transition-colors duration-200 hover:bg-claro/10 sm:px-10 sm:py-3.5 sm:text-base"
+    >
+      {children}
     </a>
   );
 }

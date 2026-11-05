@@ -14,6 +14,8 @@ export type Projeto = {
   stack: string[];
   link: string;
   imagem: string;
+  /** Até 3 prints extras para o cartão de destaque (início, página interna, celular) */
+  imagens?: string[];
   repositorio?: string;
   depoimento?: Depoimento;
   descricao?: string;

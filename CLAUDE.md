@@ -16,34 +16,22 @@ Portfólio pessoal de desenvolvedor freelancer. Mostra os sites/projetos que ven
 
 ## Estilo visual
 
-**Redesenho de 2026-11-05 (substitui o estilo anterior, a pedido do usuário: "muito travado, sem cor").** Referência nova: vídeo de um site de segurança digital com partículas neon (inspiração de estilo, não copiar marca, textos nem layout literal). Os prints antigos em `referencias/` ficam só como histórico.
+**Layout de 2026-11-05 (substitui os anteriores, a pedido do usuário: "quero esse tipo de site").** Base: template de portfólio de criador 3D, adaptado em `docs/prompt-site-criador.md` (layout e animações do template; conteúdo, imagens e dados do Procopio — nenhuma imagem de terceiros).
 
-- **Paleta:** fundo azul marinho quase preto, superfícies marinho, **um** destaque azul índigo neon `#4B5BFF` (com brilho), texto branco e azul acinzentado. Feixes de luz azuis estáticos atrás das seções; granulado leve.
-- **Tipografia:** uma sans só (Geist), pesada e com tracking negativo nos títulos. Sem serifada e sem itálico; o destaque de uma palavra por frase passa a ser pela cor.
-- **Botões:** pílula branca com seta dentro de um círculo índigo.
-- **Menu:** logo em cima à esquerda e "Fale comigo" em cima à direita; links numa pílula flutuante embaixo, centralizada.
-- **Objeto 3D:** nuvem de partículas azuis (um único `THREE.Points`, transformação feita no shader da GPU). O mesmo objeto atravessa a página toda.
-- **Fluidez:** meta de 60 fps em qualquer aparelho, medida também com renderização por software. Sem `backdrop-filter` por cima do 3D.
-
-## Animação no scroll
-
-Stack: Three.js ou React Three Fiber + GSAP ScrollTrigger + Lenis (rolagem suave com inércia).
-
-1. **Hero:** as partículas montam o nome PROCOPIO.
-2. **Sobre:** o nome se desfaz e as partículas formam o **rosto do usuário** à direita (fixo, como sticky) enquanto o texto passa à esquerda.
-3. **Projetos:** o rosto se abre numa nuvem mais apagada; cards escuros sobem em parallax com velocidades diferentes.
-4. **CTA final:** as partículas formam um túnel em espiral com uma esfera no centro.
-
-**Animações sempre ligadas** (decisão do usuário de 2026-11-05, ver abaixo): não respeitar `prefers-reduced-motion` nem cair para versão estática por desempenho. No mobile, 3D mais leve (menos partículas).
+- **Cores do template:** fundo `#0C0C0C`, texto `#D7E2EA`, títulos em degradê `#646973 → #BBCCD7`, seção de serviços branca, botão "Fale comigo" em degradê roxo/laranja.
+- **Fonte:** Kanit (300 a 900).
+- **Personagem:** `public/personagem.webp` (personagem 3D do Procopio, gerado pelo usuário a partir da foto dele, fundo removido) no hero, com efeito magnético.
+- **Sem partículas e sem PROCOPIO girando** (escolha do usuário).
+- **Animações:** Framer Motion (`motion`) + Lenis. Sempre ligadas (ver decisões).
 
 ## Seções
 
-1. **Hero:** o nome PROCOPIO formado pelas partículas azuis (o texto real fica oculto no `<h1>` para leitores de tela e SEO).
-2. **Sobre + Resultados:** texto curto sobre mim; números animados (contagem ao aparecer) de faturamento total, projetos entregues e ticket médio; gráfico de faturamento por mês, monocromático.
-3. **Projetos vendidos:** grade de cards escuros com print do site, nome, tipo e valor; filtro por tipo; clique abre detalhe (stack, prazo, link no ar, depoimento).
-4. **Projetos próprios:** puxados do GitHub e da Vercel, com print gerado automaticamente.
-5. **CTA final:** "Pronto para *tirar* seu projeto do papel?" + botão para o WhatsApp.
-6. **Rodapé:** PROCOPIO em tipografia cinética girando (movido do topo), contato e redes.
+1. **Hero:** menu (Sobre, Serviços, Projetos, Contato), "Oi, sou Procopio" gigante, frase curta, botão "Fale comigo", personagem magnético.
+2. **Faixa de projetos:** duas fileiras de prints dos projetos dele andando com a rolagem.
+3. **Sobre:** "Sobre mim", texto revelado letra por letra, números de resultado com contagem.
+4. **Serviços:** fundo branco, 5 serviços numerados.
+5. **Projetos:** cartões empilhados com sticky (projetos vendidos de `data/projetos.json`), depois projetos próprios do GitHub/Vercel.
+6. **Contato e rodapé:** "Pronto para tirar seu projeto do papel?" + WhatsApp; contato, redes, privacidade.
 
 ## Dados
 
@@ -79,3 +67,4 @@ Estados de carregamento e erro (se uma API falhar, o resto do site continua func
 - **2026-11-05 — Animações sempre ligadas (pedido explícito do usuário: "quero que fique ativadas sempre, não importa o motivo"):** removidos o teste de desempenho, a vigia que caía para o estático (`lib/desempenho.ts`) e todo o tratamento de `prefers-reduced-motion` (CSS, Lenis, partículas, revelação de palavras, contador, parallax). Única exceção: navegador sem WebGL, onde o 3D é impossível e fica o nome estático com brilho (o PROCOPIO girando do rodapé continua). Custo conhecido e aceito pelo usuário: pessoas que ativam "menos movimento" por sensibilidade (enjoo, labirintite) verão tudo animado; em máquina sem aceleração de hardware as partículas rodam abaixo de 60 fps (~30 medido). `?diag` mostra modo, "menos movimento", placa de vídeo e FPS reais.
 - **2026-11-05 — Animação em qualquer aparelho:** dois motores com as mesmas formas e a mesma história de rolagem. WebGL com placa de vídeo real → `Particulas.tsx` (GPU, 22 mil/9 mil pontos). Sem WebGL, WebGL por software, ou falha do WebGL ao montar → `ParticulasPlano.tsx` (canvas 2D, 4,2 mil/2,2 mil pontos). Medido em Chrome sem GPU (`--disable-gpu`, igual a PC sem aceleração): 58 fps parado, 52 rolando a página inteira. Não existe mais caminho sem animação.
 - **2026-11-05 — Rosto em partículas (pedido do usuário, com foto dele):** substitui o DNA no Sobre. `public/rosto.png` (197×215, tons de cinza + alfa) foi gerado de uma foto enviada pelo usuário: recorte só do rosto dele (a outra pessoa da foto nunca entrou no repositório), fundo removido com rembg (`u2net_human_seg`), corte abaixo do queixo, máscara oval e contraste local realçado. `amostrarImagem` pesa os pixels por alfa × brilho^2,6 (traços aparecem por contraste de densidade); `formaRosto` dá volume com curvatura oval + brilho; o brilho de cada partícula vem da foto (luz e sombra). Sem a imagem, cai na espiral. Partículas: 36 mil/15 mil (3D), 5 mil/2,8 mil (2D). Para trocar o rosto: gerar um novo `public/rosto.png` com o mesmo tratamento.
+- **2026-11-05 — Layout do template de criador 3D (substitui partículas, rosto, PROCOPIO girando, Geist, marinho/índigo e o gráfico mensal):** escolhas do usuário: cores do template e tirar todas as partículas. Removidos three/R3F/drei/GSAP e os motores de partículas. O gráfico de faturamento por mês saiu (o template mostra só os números). Objetos 3D decorativos do "Sobre" ficam de fora até o usuário gerar os dele (as imagens do template eram de terceiros).

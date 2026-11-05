@@ -1,32 +1,47 @@
 @import "tailwindcss";
 
 @theme {
-  /* Marinho quase preto + um destaque índigo neon */
-  --color-fundo: #050816;
-  --color-superficie: #0b1230;
-  --color-superficie-2: #111a3d;
-  --color-borda: #1c2754;
-  --color-borda-forte: #2c3a73;
-  --color-texto: #c9d1f2;
-  --color-apagado: #8590bb;
+  /* Cores do template */
+  --color-fundo: #0c0c0c;
+  --color-claro: #d7e2ea;
+  --color-branco: #ffffff;
+  --color-linha: rgb(215 226 234 / 0.14);
+  /* Nomes usados pelos componentes reaproveitados, já nas cores do template */
+  --color-superficie: #141414;
+  --color-superficie-2: #1c1c1c;
+  --color-borda: rgb(215 226 234 / 0.16);
+  --color-borda-forte: rgb(215 226 234 / 0.32);
+  --color-texto: #d7e2ea;
+  --color-apagado: #9aa5ad;
   --color-forte: #ffffff;
-  --color-destaque: #4b5bff;
-  --color-destaque-claro: #8f9bff;
+  --color-destaque: #b600a8;
+  --color-destaque-claro: #bbccd7;
 
-  --font-sans: var(--font-geist), system-ui, sans-serif;
+  --font-sans: var(--font-kanit), system-ui, sans-serif;
 
-  --ease-suave: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-suave: cubic-bezier(0.25, 0.1, 0.25, 1);
 }
+
+/* O reset (box-sizing, margem e padding zerados) já vem do preflight do Tailwind, dentro da camada base.
+   Um reset fora das camadas venceria as classes utilitárias de espaçamento. */
 
 :root {
   color-scheme: dark;
 }
 
-html {
+html,
+body {
   background: var(--color-fundo);
 }
 
-/* Lenis */
+body {
+  color: var(--color-claro);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+/* Lenis (rolagem suave) */
 html.lenis,
 html.lenis body {
   height: auto;
@@ -38,96 +53,26 @@ html.lenis body {
   overflow: hidden;
 }
 
-body {
-  background: var(--color-fundo);
-  color: var(--color-texto);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  overflow-x: clip;
-}
-
-/* Vinheta: escurece as bordas por cima do 3D, por baixo do conteúdo */
-.vinheta {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: radial-gradient(120% 90% at 50% 45%, transparent 45%, rgb(2 4 14 / 0.8) 100%);
-}
-
-/* Granulado: textura fixa por cima de tudo */
-.granulado {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-}
-
-
-/* Títulos: sans pesada com tracking negativo; a palavra em destaque ganha cor (não itálico) */
-.titulo {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  letter-spacing: -0.045em;
-  line-height: 1.02;
-  color: var(--color-forte);
-  text-wrap: balance;
-}
-.titulo-degrade {
-  background: linear-gradient(90deg, #ffffff, #9da8d8);
+/* Títulos grandes em degradê (do template) */
+.hero-heading {
+  background: linear-gradient(180deg, #646973 0%, #bbccd7 100%);
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
-}
-.titulo em {
-  font-style: normal;
-  color: var(--color-destaque-claro);
-  text-shadow: 0 0 32px rgb(75 91 255 / 0.55);
-}
-.titulo-degrade em {
-  -webkit-text-fill-color: var(--color-destaque-claro);
+  -webkit-text-fill-color: transparent;
 }
 
-/* Etiqueta de seção: ponto índigo aceso + texto pequeno */
-.etiqueta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: var(--color-apagado);
+/* Botão de contato: degradê roxo/laranja com brilho interno e contorno branco */
+.botao-contato {
+  background: linear-gradient(123deg, #18011f 7%, #b600a8 37%, #7621b0 72%, #be4c00 100%);
+  box-shadow:
+    0px 4px 4px rgba(181, 1, 167, 0.25),
+    4px 4px 12px #7721b1 inset;
+  outline: 2px solid #ffffff;
+  outline-offset: -3px;
 }
-.etiqueta::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
-  background: var(--color-destaque);
-  box-shadow: 0 0 10px 2px rgb(75 91 255 / 0.8);
-}
-
-/* Feixe de luz vertical (estático: gradientes desenhados uma vez, sem filtro animado) */
-.feixe {
-  position: absolute;
-  pointer-events: none;
-  width: 40vw;
-  max-width: 520px;
-  height: 100%;
-  top: 0;
-  background:
-    radial-gradient(closest-side, rgb(75 91 255 / 0.45), transparent) center 0 / 18% 70% no-repeat,
-    radial-gradient(closest-side, rgb(75 91 255 / 0.18), transparent) center 0 / 100% 55% no-repeat;
-  opacity: 0.7;
-}
-
-/* Cartão de vidro escuro: superfície sólida translúcida + brilho fino no topo (sem backdrop-filter) */
-.vidro {
-  background:
-    linear-gradient(180deg, rgb(143 155 255 / 0.08), transparent 40%),
-    rgb(11 18 48 / 0.82);
-  border: 1px solid var(--color-borda);
+.botao-contato:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
 }
 
 p {
@@ -135,114 +80,41 @@ p {
 }
 
 :focus-visible {
-  outline: 2px solid #ffffff;
+  outline: 2px solid var(--color-claro);
   outline-offset: 4px;
   border-radius: 4px;
 }
 
 ::selection {
-  background: #4b5bff;
+  background: #b600a8;
   color: #ffffff;
 }
 
-/* Entrada da primeira dobra: o único momento orquestrado no carregamento */
-.entrada {
-  opacity: 0;
-  animation: entrada 900ms var(--ease-suave) forwards;
-}
-@keyframes entrada {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* Legibilidade sobre o 3D: sombra suave atrás do texto */
-.sobre-3d {
-  filter: drop-shadow(0 4px 24px rgb(2 4 14 / 0.85));
-}
-.sobre-3d-texto {
-  text-shadow: 0 1px 16px rgb(0 0 0 / 0.9);
-}
-
-/* Palavra giratória da hero (tipografia cinética em CSS 3D) */
-.palavra-giratoria {
-  position: relative;
-  display: inline-block;
-  font-family: var(--font-archivo), sans-serif;
+/* Títulos menores dos componentes reaproveitados */
+.titulo {
   font-weight: 800;
-  font-stretch: 125%;
-  font-variation-settings: "wdth" 125;
-  font-size: clamp(2.5rem, 13vw, 13rem);
-  line-height: 1;
   letter-spacing: -0.02em;
+  line-height: 1.02;
+  color: #ffffff;
+  text-wrap: balance;
+}
+.titulo em {
+  font-style: normal;
+  color: #bbccd7;
+}
+
+/* Etiqueta de seção pequena */
+.etiqueta {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
   text-transform: uppercase;
-  perspective: 1200px;
-  white-space: nowrap;
-}
-.pg-medida {
-  visibility: hidden;
-}
-.pg-fatia {
-  position: absolute;
-  top: -20%;
-  bottom: -20%;
-  transform-style: preserve-3d;
-  animation-name: pg-girar;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-.pg-face {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-.pg-texto {
-  position: absolute;
-  top: 14.2857%; /* 20% de sobra ÷ 140% de altura da fatia */
-  white-space: nowrap;
-}
-.pg-frente {
-  color: #e6e9ff;
-  text-shadow: 0 0 18px rgb(75 91 255 / 0.7);
-}
-.pg-verso {
-  color: transparent;
-  -webkit-text-stroke: 0.018em #8f9bff;
-  transform: rotateX(180deg);
-}
-@keyframes pg-girar {
-  from {
-    transform: rotateX(0deg);
-  }
-  to {
-    transform: rotateX(360deg);
-  }
+  letter-spacing: 0.1em;
+  color: var(--color-apagado);
 }
 
-/* Nome estático da hero: some quando as partículas assumem */
-.nome-estatico {
-  display: block;
-  font-family: var(--font-archivo), sans-serif;
-  font-weight: 800;
-  font-stretch: 125%;
-  font-variation-settings: "wdth" 125;
-  font-size: clamp(2.5rem, 13vw, 13rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: #e6e9ff;
-  text-shadow:
-    0 0 24px rgb(75 91 255 / 0.65),
-    0 0 80px rgb(75 91 255 / 0.35);
-  transition: opacity 1s var(--ease-suave);
-}
-html[data-fita="3d"] .nome-estatico,
-html[data-fita="2d"] .nome-estatico {
-  opacity: 0;
+/* Cartão escuro com contorno claro */
+.vidro {
+  background: #121212;
+  border: 1px solid var(--color-borda);
 }

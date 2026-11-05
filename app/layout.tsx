@@ -1,18 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Geist } from "next/font/google";
+import { Kanit } from "next/font/google";
 import "./globals.css";
 import { site } from "@/data/site";
 
-const larga = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" });
-
-const sans = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
+const kanit = Kanit({
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-kanit",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: `${site.nome} | Sites que geram resultado`,
+  title: "Procopio | Desenvolvedor de sites",
   description: site.descricao,
   openGraph: {
-    title: `${site.nome} | Sites que geram resultado`,
+    title: "Procopio | Desenvolvedor de sites",
     description: site.descricao,
     type: "website",
     locale: "pt_BR",
@@ -21,21 +24,20 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#050816",
+  themeColor: "#0c0c0c",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${sans.variable} ${larga.variable}`}>
+    <html lang="pt-BR" className={kanit.variable}>
       <body>
         <a
           href="#conteudo"
-          className="fixed left-4 top-4 z-[70] -translate-y-24 rounded-full bg-white px-4 py-2 text-sm font-semibold text-fundo transition-transform duration-300 ease-suave focus:translate-y-0"
+          className="fixed left-4 top-4 z-[70] -translate-y-24 rounded-full bg-white px-4 py-2 text-sm font-medium text-fundo transition-transform duration-300 focus:translate-y-0"
         >
           Pular para o conteúdo
         </a>
         {children}
-        <div className="granulado" aria-hidden="true" />
       </body>
     </html>
   );
