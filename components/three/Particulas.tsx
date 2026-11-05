@@ -3,7 +3,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import { AdditiveBlending, BufferAttribute, BufferGeometry, Color, Points, ShaderMaterial } from "three";
-import { aleatorio, formaEspiral, formaNome, formaNuvem, formaTunel, FORMAS, type Ponto2D } from "@/lib/particulas";
+import { aleatorio, formaNome, formaNuvem, formaRosto, formaTunel, FORMAS, type Ponto2D, type PontoImagem } from "@/lib/particulas";
 import { faseAtual, scrollState } from "@/lib/scroll-state";
 
 const FASE_MAX = FORMAS.length - 1;
@@ -11,7 +11,8 @@ const FOV = 35;
 
 const vertex = /* glsl */ `
 attribute vec3 aNome;
-attribute vec3 aEspiral;
+attribute vec3 aRosto;
+attribute float aLuz;
 attribute vec3 aNuvem;
 attribute vec3 aTunel;
 attribute vec4 aRnd;
@@ -22,10 +23,11 @@ uniform float uTam;
 uniform float uEscala;
 varying float vBrilho;
 varying float vAlfa;
+varying float vRosto;
 
 vec3 forma(float k) {
   if (k < 0.5) return aNome;
-  if (k < 1.5) return aEspiral;
+  if (k < 1.5) return aRosto;
   if (k < 2.5) return aNuvem;
   return aTunel;
 }
@@ -51,7 +53,10 @@ void main() {
   gl_Position = projectionMatrix * mv;
   float profundidade = max(-mv.z, 0.1);
   gl_PointSize = uTam * (0.55 + aRnd.w * 0.9) * uEscala / profundidade;
-  vBrilho = aRnd.w;
+  // No rosto, o brilho vem da foto (luz e sombra); nas outras formas, é aleatório
+  float noRosto = clamp(1.0 - abs(uFase - 1.0), 0.0, 1.0);
+  vBrilho = mix(aRnd.w, aLuz, noRosto);
+  vRosto = noRosto;
   // Some ao longe (névoa) e quando passa colado na câmera
   vAlfa = smoothstep(32.0, 8.0, profundidade) * smoothstep(0.4, 2.0, profundidade);
 }
@@ -63,25 +68,29 @@ uniform vec3 uCorB;
 uniform float uIntensidade;
 varying float vBrilho;
 varying float vAlfa;
+varying float vRosto;
 
 void main() {
   float d = length(gl_PointCoord - 0.5) * 2.0;
   if (d > 1.0) discard;
   float nucleo = pow(1.0 - d, 1.8);
   // Maioria índigo; algumas partículas e o centro de cada uma puxam para o branco
-  vec3 cor = mix(uCorA, uCorB, smoothstep(0.82, 1.0, vBrilho) * 0.8 + pow(1.0 - d, 6.0) * 0.5);
-  gl_FragColor = vec4(cor, nucleo * vAlfa * uIntensidade);
+  // Nas outras formas só algumas partículas clareiam; no rosto, a escala de luz segue a foto
+  float claro = mix(smoothstep(0.82, 1.0, vBrilho) * 0.8, smoothstep(0.35, 1.0, vBrilho) * 0.9, vRosto);
+  vec3 cor = mix(uCorA, uCorB, claro + pow(1.0 - d, 6.0) * 0.5);
+  float luzRosto = mix(1.0, 0.35 + 0.9 * vBrilho, vRosto);
+  gl_FragColor = vec4(cor, nucleo * vAlfa * uIntensidade * luzRosto);
 }
 `;
 
-type Props = { quantidade: number; texto: Ponto2D[]; aoPronto: () => void };
+type Props = { quantidade: number; texto: Ponto2D[]; rosto: PontoImagem[]; aoPronto: () => void };
 
 /**
  * Nuvem de partículas: um único THREE.Points (1 chamada de desenho).
  * As 4 formas ficam em atributos; a mistura entre elas é feita no shader,
  * então a CPU só atualiza 4 números por quadro.
  */
-export function Particulas({ quantidade, texto, aoPronto }: Props) {
+export function Particulas({ quantidade, texto, rosto, aoPronto }: Props) {
   const pontos = useRef<Points>(null);
   const vw = useThree((s) => s.viewport.width);
   const vh = useThree((s) => s.viewport.height);
@@ -101,7 +110,9 @@ export function Particulas({ quantidade, texto, aoPronto }: Props) {
     const nome = formaNome(texto, quantidade, vp, aleatorio(11));
     g.setAttribute("position", new BufferAttribute(nome, 3));
     g.setAttribute("aNome", new BufferAttribute(nome, 3));
-    g.setAttribute("aEspiral", new BufferAttribute(formaEspiral(quantidade, vp, aleatorio(22)), 3));
+    const luz = new Float32Array(quantidade).fill(0.5);
+    g.setAttribute("aRosto", new BufferAttribute(formaRosto(rosto, quantidade, vp, aleatorio(22), luz), 3));
+    g.setAttribute("aLuz", new BufferAttribute(luz, 1));
     g.setAttribute("aNuvem", new BufferAttribute(formaNuvem(quantidade, vp, aleatorio(33)), 3));
     g.setAttribute("aTunel", new BufferAttribute(formaTunel(quantidade, aleatorio(44)), 3));
     const r = aleatorio(55);
@@ -109,7 +120,7 @@ export function Particulas({ quantidade, texto, aoPronto }: Props) {
     for (let i = 0; i < rnd.length; i++) rnd[i] = r();
     g.setAttribute("aRnd", new BufferAttribute(rnd, 4));
     return g;
-  }, [vw, vh, quantidade, texto]);
+  }, [vw, vh, quantidade, texto, rosto]);
 
   useEffect(() => () => geometria.dispose(), [geometria]);
 

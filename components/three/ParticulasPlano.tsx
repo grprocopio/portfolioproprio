@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { aleatorio, formaEspiral, formaNome, formaNuvem, formaTunel, FORMAS, type Ponto2D } from "@/lib/particulas";
+import { aleatorio, formaNome, formaNuvem, formaRosto, formaTunel, FORMAS, type Ponto2D, type PontoImagem } from "@/lib/particulas";
 import { faseAtual, scrollState } from "@/lib/scroll-state";
 
 const FASE_MAX = FORMAS.length - 1;
 const TAN_MEIO_FOV = Math.tan(((35 / 2) * Math.PI) / 180);
 const CAMERA_Z = 10;
 
-type Props = { movel: boolean; texto: Ponto2D[]; aoPronto: () => void };
+type Props = { movel: boolean; texto: Ponto2D[]; rosto: PontoImagem[]; aoPronto: () => void };
 
 const suave = (t: number) => t * t * (3 - 2 * t);
 
@@ -16,7 +16,7 @@ const suave = (t: number) => t * t * (3 - 2 * t);
  * Motor reserva em canvas 2D (sem WebGL): mesmas formas e mesma história de rolagem,
  * com menos partículas e projeção de perspectiva feita na CPU. Funciona em qualquer navegador.
  */
-export function ParticulasPlano({ movel, texto, aoPronto }: Props) {
+export function ParticulasPlano({ movel, texto, rosto, aoPronto }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -28,6 +28,7 @@ export function ParticulasPlano({ movel, texto, aoPronto }: Props) {
     let largura = 0;
     let altura = 0;
     let formas: Float32Array[] = [];
+    const luz = new Float32Array(n).fill(0.5);
     const rnd = new Float32Array(n * 4);
     const r = aleatorio(55);
     for (let i = 0; i < rnd.length; i++) rnd[i] = r();
@@ -42,7 +43,7 @@ export function ParticulasPlano({ movel, texto, aoPronto }: Props) {
       const vp = { w: h * (largura / altura), h };
       formas = [
         formaNome(texto, n, vp, aleatorio(11)),
-        formaEspiral(n, vp, aleatorio(22)),
+        formaRosto(rosto, n, vp, aleatorio(22), luz),
         formaNuvem(n, vp, aleatorio(33)),
         formaTunel(n, aleatorio(44)),
       ];
@@ -89,10 +90,15 @@ export function ParticulasPlano({ movel, texto, aoPronto }: Props) {
         const px = largura / 2 + x * escala;
         const py = altura / 2 - y * escala;
         if (px < -4 || px > largura + 4 || py < -4 || py > altura + 4) continue;
-        const brilho = rnd[q + 3];
-        const lado = Math.max(1, 0.024 * (0.55 + brilho * 0.9) * escala);
+        // No rosto, o brilho vem da foto (luz e sombra)
+        const noRosto = Math.max(0, 1 - Math.abs(f - 1));
+        const brilho = rnd[q + 3] + (luz[i] - rnd[q + 3]) * noRosto;
+        // No rosto, pontos menores: os traços precisam de detalhe fino
+        const lado = Math.max(1, 0.024 * (0.55 + brilho * 0.9) * escala * (1 - 0.45 * noRosto));
         const alfa = intensidade * Math.min(1, (32 - prof) / 24) * Math.min(1, (prof - 0.4) / 1.6);
-        ctx.fillStyle = brilho > 0.88 ? `rgba(220,226,255,${alfa})` : `rgba(75,91,255,${alfa * 0.85})`;
+        const limite = 0.88 - 0.3 * noRosto;
+        const a2 = alfa * (1 - noRosto + noRosto * (0.35 + 0.9 * brilho));
+        ctx.fillStyle = brilho > limite ? `rgba(220,226,255,${a2})` : `rgba(75,91,255,${a2 * 0.85})`;
         ctx.fillRect(px - lado / 2, py - lado / 2, lado, lado);
       }
 
@@ -108,7 +114,7 @@ export function ParticulasPlano({ movel, texto, aoPronto }: Props) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", montar);
     };
-  }, [movel, texto, aoPronto]);
+  }, [movel, texto, rosto, aoPronto]);
 
   return <canvas ref={ref} className="h-full w-full" />;
 }

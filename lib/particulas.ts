@@ -6,8 +6,10 @@
 
 export type Viewport = { w: number; h: number };
 export type Ponto2D = { x: number; y: number };
+/** Pixel de foto: posição normalizada, brilho (0 a 1) e peso na amostragem (0 a 1) */
+export type PontoImagem = Ponto2D & { brilho: number; peso: number };
 
-export const FORMAS = ["nome", "espiral", "nuvem", "tunel"] as const;
+export const FORMAS = ["nome", "rosto", "nuvem", "tunel"] as const;
 export type Forma = (typeof FORMAS)[number];
 
 const TAU = Math.PI * 2;
@@ -123,6 +125,66 @@ export function formaTunel(n: number, r: () => number): Float32Array {
       const raio = 2.4 + gauss(r) * 0.12;
       out.set([Math.cos(ang) * raio, Math.sin(ang) * raio, -26 + t * 34], i * 3);
     }
+  }
+  return out;
+}
+
+/**
+ * Lê uma foto (já sem fundo, em tons de cinza) e devolve os pixels visíveis.
+ * Peso = opacidade × brilho^2,6: os traços do rosto aparecem por contraste de densidade.
+ * Coordenadas como em amostrarTexto: unidades da altura da imagem, centro em (0,0), y para cima.
+ */
+export function amostrarImagem(rgba: Uint8ClampedArray, w: number, h: number, passo: number): PontoImagem[] {
+  const ps: PontoImagem[] = [];
+  for (let y = 0; y < h; y += passo) {
+    for (let x = 0; x < w; x += passo) {
+      const i = (y * w + x) * 4;
+      const alfa = rgba[i + 3] / 255;
+      if (alfa < 0.08) continue;
+      const brilho = (rgba[i] * 0.299 + rgba[i + 1] * 0.587 + rgba[i + 2] * 0.114) / 255;
+      // Curva forte: pele clara recebe muitos pontos e traços escuros (olhos, boca) quase nenhum
+      ps.push({ x: (x + 0.5 - w / 2) / h, y: (h / 2 - y - 0.5) / h, brilho, peso: alfa * (0.02 + 0.98 * brilho ** 2.6) });
+    }
+  }
+  return ps;
+}
+
+/**
+ * Rosto em partículas na lateral direita, no lugar do DNA.
+ * Mais partículas onde a foto é clara; volume = curvatura oval (cabeça) + um pouco do brilho.
+ * Sem imagem (falha ao carregar), devolve a espiral: a animação nunca fica sem forma.
+ */
+export function formaRosto(img: PontoImagem[], n: number, vp: Viewport, r: () => number, luz?: Float32Array): Float32Array {
+  if (img.length === 0) return formaEspiral(n, vp, r);
+  const out = new Float32Array(n * 3);
+  const retrato = vp.w < vp.h;
+  const altura = retrato ? vp.h * 0.46 : vp.h * 0.72;
+  const cx = vp.w * (retrato ? 0.2 : 0.25);
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity, pesoMax = 0;
+  for (const p of img) {
+    minX = Math.min(minX, p.x);
+    maxX = Math.max(maxX, p.x);
+    minY = Math.min(minY, p.y);
+    maxY = Math.max(maxY, p.y);
+    pesoMax = Math.max(pesoMax, p.peso);
+  }
+  const escala = altura / (maxY - minY || 1);
+  const meioX = (minX + maxX) / 2;
+  const meioY = (minY + maxY) / 2;
+  const rx = ((maxX - minX) / 2) * escala || 1;
+  const ry = ((maxY - minY) / 2) * escala || 1;
+  const fundo = rx * 0.9;
+  for (let i = 0; i < n; i++) {
+    // Amostragem por rejeição: pixels claros são escolhidos mais vezes
+    let p = img[Math.floor(r() * img.length)];
+    for (let tentativa = 0; tentativa < 12 && r() * pesoMax > p.peso; tentativa++) p = img[Math.floor(r() * img.length)];
+    const x = (p.x - meioX) * escala + (r() - 0.5) * 0.012;
+    const y = (p.y - meioY) * escala + (r() - 0.5) * 0.012;
+    const u = x / rx;
+    const v = y / ry;
+    const bojo = Math.sqrt(Math.max(0, 1 - u * u - v * v));
+    out.set([cx + x, y, bojo * fundo + p.brilho * 0.18 + (r() - 0.5) * 0.03], i * 3);
+    if (luz) luz[i] = p.brilho;
   }
   return out;
 }

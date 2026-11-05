@@ -62,6 +62,39 @@ describe("formas", () => {
   });
 
   it("a ordem das formas segue a página", () => {
-    expect(FORMAS).toEqual(["nome", "espiral", "nuvem", "tunel"]);
+    expect(FORMAS).toEqual(["nome", "rosto", "nuvem", "tunel"]);
+  });
+});
+
+describe("rosto", () => {
+  it("amostrarImagem ignora pixels transparentes e pesa pelo brilho", async () => {
+    const { amostrarImagem } = await import("./particulas");
+    // 2x1: pixel 0 transparente, pixel 1 opaco e claro
+    const rgba = new Uint8ClampedArray([255, 255, 255, 0, 200, 200, 200, 255]);
+    const ps = amostrarImagem(rgba, 2, 1, 1);
+    expect(ps).toHaveLength(1);
+    expect(ps[0].peso).toBeGreaterThan(0.5);
+    expect(ps[0].brilho).toBeCloseTo(200 / 255, 2);
+  });
+
+  it("o rosto fica à direita, com volume (centro mais à frente que as bordas)", async () => {
+    const { formaRosto } = await import("./particulas");
+    // imagem sintética: disco claro
+    const img = [];
+    for (let y = -20; y <= 20; y++)
+      for (let x = -20; x <= 20; x++)
+        if (x * x + y * y <= 400) img.push({ x: x / 40, y: y / 40, brilho: 0.8, peso: 0.8 });
+    const ps = pontos(formaRosto(img, N, vp, aleatorio(6)));
+    const mx = ps.reduce((s, p) => s + p[0], 0) / ps.length;
+    expect(mx).toBeGreaterThan(0);
+    const centro = ps.filter((p) => Math.abs(p[0] - mx) < 0.15);
+    const borda = ps.filter((p) => Math.abs(p[0] - mx) > 0.6);
+    const media = (xs: number[][]) => xs.reduce((s, p) => s + p[2], 0) / xs.length;
+    expect(media(centro)).toBeGreaterThan(media(borda));
+  });
+
+  it("sem imagem, cai na espiral (nunca quebra a animação)", async () => {
+    const { formaRosto } = await import("./particulas");
+    expect(formaRosto([], N, vp, aleatorio(7))).toEqual(formaEspiral(N, vp, aleatorio(7)));
   });
 });

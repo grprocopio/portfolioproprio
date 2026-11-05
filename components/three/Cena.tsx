@@ -1,12 +1,12 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import type { Ponto2D } from "@/lib/particulas";
+import type { Ponto2D, PontoImagem } from "@/lib/particulas";
 import { Particulas } from "./Particulas";
 
-type Props = { movel: boolean; texto: Ponto2D[]; aoCarregar: () => void };
+type Props = { movel: boolean; texto: Ponto2D[]; rosto: PontoImagem[]; aoCarregar: () => void };
 
-export default function Cena({ movel, texto, aoCarregar }: Props) {
+export default function Cena({ movel, texto, rosto, aoCarregar }: Props) {
   // Resolução fixa desde o início (trocar no meio da rolagem realoca o canvas e engasga)
   const dpr = Math.min(typeof window === "undefined" ? 1 : window.devicePixelRatio || 1, movel ? 1.5 : 1.75);
 
@@ -21,6 +21,7 @@ export default function Cena({ movel, texto, aoCarregar }: Props) {
       <Particulas
         quantidade={movel ? 15000 : 36000}
         texto={texto}
+        rosto={rosto}
         aoPronto={aoCarregar}
       />
     </Canvas>

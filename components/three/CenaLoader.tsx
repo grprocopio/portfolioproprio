@@ -2,12 +2,12 @@
 
 import dynamic from "next/dynamic";
 import { Component, useCallback, useEffect, useState, type ReactNode } from "react";
-import { amostrarTexto, type Ponto2D } from "@/lib/particulas";
+import { amostrarImagem, amostrarTexto, type Ponto2D, type PontoImagem } from "@/lib/particulas";
 import { ParticulasPlano } from "./ParticulasPlano";
 
 const Cena = dynamic(() => import("./Cena"), { ssr: false });
 
-type Modo = { motor: "3d" | "2d"; movel: boolean; texto: Ponto2D[] };
+type Modo = { motor: "3d" | "2d"; movel: boolean; texto: Ponto2D[]; rosto: PontoImagem[] };
 
 /**
  * Escolhe o motor: WebGL com placa de vídeo de verdade → 3D na GPU.
@@ -59,6 +59,20 @@ async function amostrarNome(palavra: string): Promise<Ponto2D[]> {
   return amostrarTexto(ctx.getImageData(0, 0, W, H).data, W, H, 2);
 }
 
+/** Lê a foto do rosto (já sem fundo, em tons de cinza). Se falhar, as partículas usam a espiral. */
+async function amostrarRosto(): Promise<PontoImagem[]> {
+  const img = new Image();
+  img.src = "/rosto.png";
+  await img.decode();
+  const c = document.createElement("canvas");
+  c.width = img.naturalWidth;
+  c.height = img.naturalHeight;
+  const ctx = c.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return [];
+  ctx.drawImage(img, 0, 0);
+  return amostrarImagem(ctx.getImageData(0, 0, c.width, c.height).data, c.width, c.height, 1);
+}
+
 /** Se o WebGL falhar depois de montar (contexto recusado, driver quebrado), troca para o canvas 2D. */
 class SeFalhar extends Component<{ aoFalhar: () => void; children: ReactNode }, { falhou: boolean }> {
   state = { falhou: false };
@@ -87,11 +101,11 @@ export function CenaLoader({ palavra }: { palavra: string }) {
     let cancelado = false;
     const movel = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
     const motor = escolherMotor();
-    amostrarNome(palavra)
-      .catch(() => [] as Ponto2D[])
-      .then((texto) => {
-        if (!cancelado) setModo({ motor, movel, texto });
-      });
+    Promise.all([amostrarNome(palavra).catch(() => [] as Ponto2D[]), amostrarRosto().catch(() => [] as PontoImagem[])]).then(
+      ([texto, rosto]) => {
+        if (!cancelado) setModo({ motor, movel, texto, rosto });
+      },
+    );
     return () => {
       cancelado = true;
     };
@@ -112,10 +126,10 @@ export function CenaLoader({ palavra }: { palavra: string }) {
     >
       {modo.motor === "3d" ? (
         <SeFalhar aoFalhar={() => setModo({ ...modo, motor: "2d" })}>
-          <Cena movel={modo.movel} texto={modo.texto} aoCarregar={aoPronto} />
+          <Cena movel={modo.movel} texto={modo.texto} rosto={modo.rosto} aoCarregar={aoPronto} />
         </SeFalhar>
       ) : (
-        <ParticulasPlano movel={modo.movel} texto={modo.texto} aoPronto={aoPronto} />
+        <ParticulasPlano movel={modo.movel} texto={modo.texto} rosto={modo.rosto} aoPronto={aoPronto} />
       )}
     </div>
   );
