@@ -6,7 +6,7 @@ import { amostrarTexto, type Ponto2D } from "@/lib/particulas";
 
 const Cena = dynamic(() => import("./Cena"), { ssr: false });
 
-type Modo = { tipo: "3d"; movel: boolean; forcar: boolean; texto: Ponto2D[] } | { tipo: "estatico"; motivo: string };
+type Modo = { tipo: "3d"; movel: boolean; texto: Ponto2D[] } | { tipo: "estatico"; motivo: string };
 
 function temWebGL() {
   try {
@@ -51,10 +51,9 @@ async function amostrarNome(palavra: string): Promise<Ponto2D[]> {
 }
 
 /**
- * Decide como mostrar as partículas.
- * 3D quando o aparelho aguenta (medido no aquecimento); senão, o nome estático com brilho,
- * que já vem no HTML. Movimento reduzido e falta de WebGL também ficam no estático.
- * `?fita=3d` força o 3D (testes).
+ * Partículas sempre ligadas (decisão do usuário): não há teste de desempenho nem respeito a
+ * "menos movimento". A única exceção é navegador sem WebGL, onde é impossível desenhar o 3D:
+ * fica o nome estático com brilho, que já vem no HTML.
  */
 export function CenaLoader({ palavra }: { palavra: string }) {
   const [modo, setModo] = useState<Modo | null>(null);
@@ -62,15 +61,13 @@ export function CenaLoader({ palavra }: { palavra: string }) {
 
   useEffect(() => {
     let cancelado = false;
-    const forcar = new URLSearchParams(location.search).get("fita") === "3d";
-    const reduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!forcar && (reduzido || !temWebGL())) {
-      setModo({ tipo: "estatico", motivo: reduzido ? "movimento-reduzido" : "sem-webgl" });
+    if (!temWebGL()) {
+      setModo({ tipo: "estatico", motivo: "sem-webgl" });
       return;
     }
     const movel = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
     amostrarNome(palavra).then((texto) => {
-      if (!cancelado) setModo({ tipo: "3d", movel, forcar, texto });
+      if (!cancelado) setModo({ tipo: "3d", movel, texto });
     });
     return () => {
       cancelado = true;
@@ -94,10 +91,8 @@ export function CenaLoader({ palavra }: { palavra: string }) {
     >
       <Cena
         movel={modo.movel}
-        forcar={modo.forcar}
         texto={modo.texto}
         aoCarregar={() => setPronta(true)}
-        aoFalhar={() => setModo({ tipo: "estatico", motivo: "lento" })}
       />
     </div>
   );

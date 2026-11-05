@@ -26,7 +26,7 @@ export function ProjetosVendidos({ projetos, modo, exemplos }: Props) {
   // Parallax: as duas colunas sobem em velocidades diferentes (só telas largas)
   useEffect(() => {
     const mm = gsap.matchMedia();
-    mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
+    mm.add("(min-width: 768px)", () => {
       [
         [colA.current, 40, -40],
         [colB.current, 120, -120],

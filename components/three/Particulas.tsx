@@ -5,12 +5,8 @@ import { useEffect, useMemo, useRef } from "react";
 import { AdditiveBlending, BufferAttribute, BufferGeometry, Color, Points, ShaderMaterial } from "three";
 import { aleatorio, formaEspiral, formaNome, formaNuvem, formaTunel, FORMAS, type Ponto2D } from "@/lib/particulas";
 import { faseAtual, scrollState } from "@/lib/scroll-state";
-import { quadroLento } from "@/lib/desempenho";
 
 const FASE_MAX = FORMAS.length - 1;
-/** Quadros iniciais medidos (custo real: render + leitura de 1 pixel) antes de mostrar a cena */
-const AQUECIMENTO = 24;
-const DESCARTE = 2;
 const FOV = 35;
 
 const vertex = /* glsl */ `
@@ -78,14 +74,14 @@ void main() {
 }
 `;
 
-type Props = { quantidade: number; texto: Ponto2D[]; aoPronto: () => void; aoLento?: () => void };
+type Props = { quantidade: number; texto: Ponto2D[]; aoPronto: () => void };
 
 /**
  * Nuvem de partículas: um único THREE.Points (1 chamada de desenho).
  * As 4 formas ficam em atributos; a mistura entre elas é feita no shader,
  * então a CPU só atualiza 4 números por quadro.
  */
-export function Particulas({ quantidade, texto, aoPronto, aoLento }: Props) {
+export function Particulas({ quantidade, texto, aoPronto }: Props) {
   const pontos = useRef<Points>(null);
   const vw = useThree((s) => s.viewport.width);
   const vh = useThree((s) => s.viewport.height);
@@ -97,10 +93,7 @@ export function Particulas({ quantidade, texto, aoPronto, aoLento }: Props) {
 
   const fase = useRef(faseAtual());
   const rot = useRef({ x: 0, y: 0 });
-  const aquecimento = useRef(AQUECIMENTO);
-  const tempos = useRef<number[]>([]);
-  const ultimo = useRef(0);
-  const pixel = useMemo(() => new Uint8Array(4), []);
+  const pronto = useRef(false);
 
   const geometria = useMemo(() => {
     const vp = { w: vw, h: vh };
@@ -156,34 +149,11 @@ export function Particulas({ quantidade, texto, aoPronto, aoLento }: Props) {
   useFrame((state, delta) => {
     const u = material.uniforms;
 
-    // Aquecimento invisível: mede o custo real de um quadro na forma mais pesada (túnel)
-    if (aquecimento.current > 0) {
-      aquecimento.current--;
-      u.uFase.value = FASE_MAX;
-      const t0 = performance.now();
-      state.gl.render(state.scene, state.camera);
-      const ctx = state.gl.getContext();
-      ctx.readPixels(0, 0, 1, 1, ctx.RGBA, ctx.UNSIGNED_BYTE, pixel);
-      if (aoLento && aquecimento.current < AQUECIMENTO - DESCARTE) {
-        tempos.current.push(performance.now() - t0);
-        if (quadroLento(tempos.current)) return aoLento();
-      }
-      if (aquecimento.current > 0) return;
-      tempos.current = [];
+    // Primeiro quadro desenhado: mostra a cena (sem teste de desempenho: animação sempre ligada)
+    if (!pronto.current) {
+      pronto.current = true;
       aoPronto();
     }
-
-    // Vigia contínua: se a máquina engasgar de forma consistente, cai para a versão estática
-    const agora = performance.now();
-    if (aoLento && ultimo.current) {
-      const intervalo = agora - ultimo.current;
-      if (intervalo < 3000) {
-        tempos.current.push(intervalo);
-        if (tempos.current.length > 40) tempos.current.shift();
-        if (quadroLento(tempos.current)) return aoLento();
-      }
-    }
-    ultimo.current = agora;
 
     const dt = Math.min(delta, 0.05);
     fase.current += (faseAtual() - fase.current) * Math.min(1, dt * 5);

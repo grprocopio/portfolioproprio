@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { Diagnostico } from "@/components/Diagnostico";
 import { Menu } from "@/components/Menu";
 import { Rodape } from "@/components/Rodape";
 import { Cta } from "@/components/sections/Cta";
@@ -24,6 +25,7 @@ export default function Home() {
       <CenaLoader palavra="PROCOPIO" />
       <div className="vinheta" aria-hidden="true" />
       <Menu />
+      <Diagnostico />
       <main id="conteudo" className="relative z-10">
         <Hero palavra="PROCOPIO" />
         <Sobre resumo={r} exemplos={temExemplos} />

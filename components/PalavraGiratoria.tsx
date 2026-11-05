@@ -10,7 +10,7 @@ type Props = { palavra: string; fatias?: number; duracao?: number; torcao?: numb
  * Desempenho: cada face é uma janela estreita (largura da fatia, overflow oculto)
  * com a palavra deslocada dentro dela. Assim cada camada na GPU tem só o tamanho
  * da fatia, e o total de pixels compostos por quadro é ~2× a palavra, não 2N×.
- * Só CSS (transform); com movimento reduzido fica parada.
+ * Só CSS (transform), sempre animada.
  */
 export function PalavraGiratoria({ palavra, fatias = 48, duracao = 7, torcao = 0.55 }: Props) {
   const largura = 100 / fatias;

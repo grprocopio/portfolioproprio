@@ -4,15 +4,9 @@ import { Canvas } from "@react-three/fiber";
 import type { Ponto2D } from "@/lib/particulas";
 import { Particulas } from "./Particulas";
 
-type Props = {
-  movel: boolean;
-  forcar: boolean;
-  texto: Ponto2D[];
-  aoCarregar: () => void;
-  aoFalhar: () => void;
-};
+type Props = { movel: boolean; texto: Ponto2D[]; aoCarregar: () => void };
 
-export default function Cena({ movel, forcar, texto, aoCarregar, aoFalhar }: Props) {
+export default function Cena({ movel, texto, aoCarregar }: Props) {
   // Resolução fixa desde o início (trocar no meio da rolagem realoca o canvas e engasga)
   const dpr = Math.min(typeof window === "undefined" ? 1 : window.devicePixelRatio || 1, movel ? 1.5 : 1.75);
 
@@ -28,7 +22,6 @@ export default function Cena({ movel, forcar, texto, aoCarregar, aoFalhar }: Pro
         quantidade={movel ? 9000 : 22000}
         texto={texto}
         aoPronto={aoCarregar}
-        aoLento={forcar ? undefined : aoFalhar}
       />
     </Canvas>
   );

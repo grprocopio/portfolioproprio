@@ -17,8 +17,6 @@ const trechos: { trigger: string; start: string; end: string }[] = [
 
 export function RolagemSuave() {
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
     const lenis = new Lenis({ lerp: 0.09, anchors: { offset: 0 }, autoRaf: false });
     lenis.on("scroll", ScrollTrigger.update);
     const raf = (t: number) => lenis.raf(t * 1000);

@@ -145,15 +145,6 @@ p {
   color: #ffffff;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-  }
-}
-
 /* Entrada da primeira dobra: o único momento orquestrado no carregamento */
 .entrada {
   opacity: 0;
@@ -167,12 +158,6 @@ p {
   to {
     opacity: 1;
     transform: none;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .entrada {
-    opacity: 1;
-    animation: none;
   }
 }
 
@@ -238,11 +223,6 @@ p {
   }
   to {
     transform: rotateX(360deg);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .pg-fatia {
-    animation: none;
   }
 }
 

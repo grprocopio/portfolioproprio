@@ -20,10 +20,6 @@ export function RevelarPalavras({ texto, className = "" }: Props) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setAcesas(palavras.length);
-      return;
-    }
     const spans = Array.from(el.querySelectorAll<HTMLSpanElement>("[data-palavra]"));
     let quadro = 0;
     const medir = () => {

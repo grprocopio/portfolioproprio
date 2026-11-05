@@ -20,7 +20,7 @@ export function Contador({ valor, formato, textoFixo }: Props) {
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || textoFixo || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!el || textoFixo) return;
     setAtual(0);
     let raf = 0;
     const obs = new IntersectionObserver(
