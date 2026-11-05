@@ -17,8 +17,8 @@ export function Botao({ href, children, variante = "primario", tamanho = "normal
   const texto = tamanho === "pequeno" ? "text-sm" : "text-base";
   const estilo =
     variante === "primario"
-      ? "bg-white text-black hover:bg-neutral-200 py-2 pl-4 pr-2"
-      : "border border-white/15 bg-white/5 text-forte backdrop-blur-md hover:bg-white/10 py-2 px-4";
+      ? "bg-white text-fundo shadow-[0_0_32px_rgb(75_91_255/0.35)] hover:bg-[#e6e9ff] hover:shadow-[0_0_44px_rgb(75_91_255/0.55)] py-2 pl-4 pr-2"
+      : "border border-borda-forte bg-superficie/80 text-forte hover:border-destaque hover:bg-superficie-2 py-2 px-4";
   const alvo = externo ? { target: "_blank", rel: "noopener noreferrer" } : {};
   return (
     <a href={href} className={`${base} ${texto} ${estilo} ${className}`} {...alvo}>
@@ -26,7 +26,7 @@ export function Botao({ href, children, variante = "primario", tamanho = "normal
       {variante === "primario" && (
         <span
           aria-hidden="true"
-          className={`grid place-items-center rounded-full bg-black text-white ${tamanho === "pequeno" ? "size-6" : "size-8"}`}
+          className={`grid place-items-center rounded-full bg-destaque text-white shadow-[0_0_12px_rgb(75_91_255/0.9)] ${tamanho === "pequeno" ? "size-6" : "size-8"}`}
         >
           <ArrowRightIcon
             weight="bold"

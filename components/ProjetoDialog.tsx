@@ -25,7 +25,7 @@ export function ProjetoDialog({ projeto, modo, aoFechar }: Props) {
       onClick={(e) => e.target === ref.current && aoFechar()}
       aria-labelledby="dialogo-titulo"
       data-lenis-prevent
-      className="m-auto max-h-[90svh] w-[calc(100%-32px)] max-w-2xl overflow-y-auto rounded-2xl border border-borda bg-superficie p-0 text-texto backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      className="m-auto max-h-[90svh] w-[calc(100%-32px)] max-w-2xl overflow-y-auto rounded-2xl border border-borda bg-superficie p-0 text-texto backdrop:bg-[#02040e]/80"
     >
       {projeto && (
         <div className="p-2">
@@ -35,7 +35,7 @@ export function ProjetoDialog({ projeto, modo, aoFechar }: Props) {
               type="button"
               onClick={aoFechar}
               aria-label="Fechar detalhes"
-              className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-black/70 text-white backdrop-blur-md transition duration-300 ease-suave hover:bg-black active:scale-[0.98]"
+              className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-fundo/85 text-white transition duration-300 ease-suave hover:bg-fundo active:scale-[0.98]"
             >
               <XIcon className="size-4" weight="bold" />
             </button>
@@ -76,7 +76,7 @@ export function ProjetoDialog({ projeto, modo, aoFechar }: Props) {
             </ul>
 
             {projeto.depoimento && (
-              <figure className="mt-6 rounded-xl bg-black/40 p-4">
+              <figure className="mt-6 rounded-xl border border-borda bg-fundo/60 p-4">
                 <blockquote className="titulo text-2xl text-forte">“{projeto.depoimento.texto}”</blockquote>
                 {projeto.depoimento.autor && (
                   <figcaption className="mt-3 text-sm text-apagado">{projeto.depoimento.autor}</figcaption>
@@ -90,7 +90,7 @@ export function ProjetoDialog({ projeto, modo, aoFechar }: Props) {
                   href={projeto.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition duration-300 ease-suave hover:bg-neutral-200 active:scale-[0.98]"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-fundo transition duration-300 ease-suave hover:bg-neutral-200 active:scale-[0.98]"
                 >
                   Ver site no ar <ArrowUpRightIcon className="size-4" weight="bold" aria-hidden="true" />
                 </a>
@@ -104,7 +104,7 @@ export function ProjetoDialog({ projeto, modo, aoFechar }: Props) {
                   href={projeto.repositorio}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-forte transition duration-300 ease-suave hover:bg-white/10 active:scale-[0.98]"
+                  className="inline-flex items-center gap-2 rounded-full border border-borda-forte px-4 py-2 text-sm font-semibold text-forte transition duration-300 ease-suave hover:bg-white/10 active:scale-[0.98]"
                 >
                   Repositório <ArrowUpRightIcon className="size-4" weight="bold" aria-hidden="true" />
                 </a>

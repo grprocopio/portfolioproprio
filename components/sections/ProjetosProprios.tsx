@@ -8,7 +8,7 @@ const perfil = `https://github.com/${site.githubUsuario}`;
 function Cabecalho() {
   return (
     <div className="max-w-md">
-      <p className="text-sm text-apagado">Projetos próprios</p>
+      <p className="etiqueta">Projetos próprios</p>
       <h2 id="titulo-proprios" className="titulo mt-4 text-5xl md:text-6xl">
         O que eu construo por <em>conta</em> própria.
       </h2>
@@ -32,13 +32,13 @@ function Moldura({ children }: { children: React.ReactNode }) {
 
 function Aviso({ texto }: { texto: string }) {
   return (
-    <div className="flex flex-col items-start gap-4 rounded-2xl border border-borda bg-superficie/70 p-6 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col items-start gap-4 vidro rounded-2xl p-6 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-sm text-texto">{texto}</p>
       <a
         href={perfil}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-forte transition duration-300 ease-suave hover:bg-white/10 active:scale-[0.98]"
+        className="inline-flex shrink-0 items-center gap-2 rounded-full border border-borda-forte px-4 py-2 text-sm font-semibold text-forte transition duration-300 ease-suave hover:bg-white/10 active:scale-[0.98]"
       >
         <GithubLogoIcon className="size-4" aria-hidden="true" /> Abrir perfil no GitHub
       </a>
@@ -51,7 +51,7 @@ export function ProjetosPropriosCarregando() {
     <Moldura>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Carregando projetos">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="rounded-2xl border border-borda bg-superficie p-2">
+          <div key={i} className="vidro rounded-2xl p-2">
             <div className="aspect-[16/10] animate-pulse rounded-lg bg-superficie-2" />
             <div className="space-y-2 p-2 pt-4">
               <div className="h-4 w-1/2 animate-pulse rounded bg-superficie-2" />
@@ -89,7 +89,7 @@ export async function ProjetosProprios() {
     <Moldura>
       <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {projetos.map((p) => (
-          <li key={p.nome} className="group flex flex-col rounded-2xl border border-borda bg-superficie p-2 transition duration-500 ease-suave hover:border-borda-forte hover:bg-superficie-2">
+          <li key={p.nome} className="vidro group flex flex-col rounded-2xl p-2 transition duration-500 ease-suave hover:border-destaque/60 hover:shadow-[0_0_40px_rgb(75_91_255/0.18)]">
             <div className="aspect-[16/10] overflow-hidden rounded-lg">
               <PrintSite link={p.link} nome={p.nome} />
             </div>
@@ -111,7 +111,7 @@ export async function ProjetosProprios() {
                     href={p.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-suave hover:bg-neutral-200 active:scale-[0.98]"
+                    className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-2 text-sm font-semibold text-fundo transition duration-300 ease-suave hover:bg-neutral-200 active:scale-[0.98]"
                   >
                     Ver no ar <ArrowUpRightIcon className="size-4" aria-hidden="true" />
                     <span className="sr-only">: {p.nome}</span>
@@ -121,7 +121,7 @@ export async function ProjetosProprios() {
                   href={p.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-2 text-sm font-semibold text-forte transition duration-300 ease-suave hover:bg-white/10 active:scale-[0.98]"
+                  className="inline-flex items-center gap-1 rounded-full border border-borda-forte px-3 py-2 text-sm font-semibold text-forte transition duration-300 ease-suave hover:bg-white/10 active:scale-[0.98]"
                 >
                   Código <ArrowUpRightIcon className="size-4" aria-hidden="true" />
                   <span className="sr-only">: {p.nome}</span>

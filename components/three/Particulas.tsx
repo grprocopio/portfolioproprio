@@ -145,7 +145,9 @@ export function Particulas({ quantidade, texto, aoPronto, aoLento }: Props) {
   // Tamanho em pixels de 1 unidade do mundo a 1 unidade da câmera
   useEffect(() => {
     material.uniforms.uEscala.value = (alturaPx * dpr) / (2 * Math.tan(((FOV / 2) * Math.PI) / 180));
-  }, [alturaPx, dpr, material]);
+    // Tela estreita: pontos menores, senão as letras do nome viram borrões
+    material.uniforms.uTam.value = 0.03 * Math.min(1, Math.max(0.5, vw / 10));
+  }, [alturaPx, dpr, vw, material]);
 
   useEffect(() => {
     gl.compile(scene, camera);
@@ -190,7 +192,9 @@ export function Particulas({ quantidade, texto, aoPronto, aoLento }: Props) {
     u.uTempo.value = state.clock.elapsedTime;
     u.uCta.value = scrollState.cta;
     // Na seção de projetos a nuvem recua para os cards ficarem em primeiro plano
-    u.uIntensidade.value = 1 - 0.55 * Math.max(0, 1 - Math.abs(f - 2));
+    // Em tela em pé o texto passa por cima das partículas: apaga mais nas seções de leitura
+    const leitura = vw < vh ? Math.min(1, Math.max(0, f - 0.6)) * Math.min(1, Math.max(0, 2.6 - f)) : 0;
+    u.uIntensidade.value = (1 - 0.55 * Math.max(0, 1 - Math.abs(f - 2))) * (1 - 0.5 * leitura);
 
     const p = scrollState.ponteiro;
     rot.current.y += (p.x * 0.12 - rot.current.y) * Math.min(1, dt * 3);

@@ -46,7 +46,7 @@ export function GraficoMensal({ porMes, modo }: Props) {
                 aria-label={`${nomeMes(m.mes)}: ${m.valor ? formatarValor(m.valor, modo) : "sem vendas"}`}
               >
                 <span
-                  className="block w-full max-w-6 rounded-t bg-texto transition-opacity duration-300 ease-suave"
+                  className="block w-full max-w-6 rounded-t bg-destaque shadow-[0_0_14px_rgb(75_91_255/0.6)] transition-opacity duration-300 ease-suave"
                   style={{ height: `${Math.max(altura, m.valor ? 2 : 0.5)}%`, opacity: destaque ? 1 : 0.35 }}
                 />
                 {ativo === i && (

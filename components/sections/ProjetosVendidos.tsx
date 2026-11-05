@@ -54,7 +54,7 @@ export function ProjetosVendidos({ projetos, modo, exemplos }: Props) {
       <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-12">
         <div className="md:col-span-5">
           <div className="md:sticky md:top-24">
-            <p className="text-sm text-apagado">Projetos vendidos</p>
+            <p className="etiqueta">Projetos vendidos</p>
             <h2 id="titulo-projetos" className="titulo mt-4 text-5xl md:text-6xl">
               Feitos para clientes <em>reais</em>.
             </h2>
@@ -70,7 +70,7 @@ export function ProjetosVendidos({ projetos, modo, exemplos }: Props) {
                   type="button"
                   aria-pressed={filtro === t}
                   onClick={() => setFiltro(t)}
-                  className="rounded-full border border-borda px-3 py-2 text-sm text-apagado transition duration-300 ease-suave hover:border-borda-forte hover:text-forte active:scale-[0.98] aria-pressed:border-white aria-pressed:bg-white aria-pressed:text-black"
+                  className="rounded-full border border-borda px-3 py-2 text-sm text-apagado transition duration-300 ease-suave hover:border-borda-forte hover:text-forte active:scale-[0.98] aria-pressed:border-destaque aria-pressed:bg-destaque aria-pressed:text-white aria-pressed:shadow-[0_0_16px_rgb(75_91_255/0.6)]"
                 >
                   {t ?? "Todos"}
                 </button>
@@ -88,7 +88,7 @@ export function ProjetosVendidos({ projetos, modo, exemplos }: Props) {
 
         <div className="md:col-span-7">
           {visiveis.length === 0 ? (
-            <p className="rounded-2xl border border-borda p-6 text-sm text-apagado">
+            <p className="vidro rounded-2xl p-6 text-sm text-apagado">
               Nenhum projeto cadastrado ainda. Eles aparecem aqui assim que entrarem em data/projetos.json.
             </p>
           ) : (

@@ -30,9 +30,10 @@ export function Sobre({ resumo, exemplos }: Props) {
 
   return (
     <section id="sobre" aria-labelledby="titulo-sobre" className="relative px-4 py-24 md:px-8">
-      <div className="mx-auto max-w-7xl">
+      <div aria-hidden="true" className="feixe right-[12%] hidden md:block" />
+      <div className="relative mx-auto max-w-7xl">
         <div className="md:w-7/12">
-          <h2 id="titulo-sobre" className="text-sm text-apagado">
+          <h2 id="titulo-sobre" className="etiqueta">
             Sobre mim
           </h2>
           <div className="mt-4 h-px w-full max-w-sm bg-borda" aria-hidden="true" />
@@ -48,14 +49,14 @@ export function Sobre({ resumo, exemplos }: Props) {
           </h3>
           <dl className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-3">
             {numeros.map((n) => (
-              <div key={n.rotulo} className="border-t border-borda pt-4">
+              <div key={n.rotulo} className="vidro rounded-2xl p-4">
                 <dt className="text-sm text-apagado">{n.rotulo}</dt>
                 <dd className="titulo mt-2 text-4xl text-forte lg:text-5xl">{n.el}</dd>
               </div>
             ))}
           </dl>
 
-          <div className="mt-12 rounded-2xl border border-borda bg-superficie/70 p-6 backdrop-blur-md">
+          <div className="vidro mt-12 rounded-2xl p-6">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <h4 className="text-base font-semibold text-forte">Faturamento por mês</h4>
               <p className="text-sm text-apagado">Passe o mouse nas barras para ver cada mês</p>

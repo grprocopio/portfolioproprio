@@ -12,21 +12,21 @@ export default function Imagem() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#0a0a0a",
+          background: "#050816",
           color: "#fff",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          fontFamily: "serif",
+          fontFamily: "sans-serif",
         }}
       >
         <div style={{ fontSize: 96, display: "flex", gap: 24 }}>
           <span>Sites que</span>
-          <span style={{ fontStyle: "italic" }}>geram</span>
+          <span style={{ color: "#8f9bff" }}>geram</span>
           <span>resultado.</span>
         </div>
-        <div style={{ fontSize: 32, color: "#9b9b9b", marginTop: 32, fontFamily: "sans-serif" }}>{site.nome}</div>
+        <div style={{ fontSize: 32, color: "#8f9bff", marginTop: 32, fontFamily: "sans-serif" }}>{site.nome}</div>
       </div>
     ),
     size,

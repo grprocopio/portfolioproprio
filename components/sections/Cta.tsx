@@ -5,6 +5,7 @@ import { linkWhatsapp } from "@/data/site";
 export function Cta() {
   return (
     <section id="contato" aria-labelledby="titulo-cta" className="relative h-[200svh]">
+      <div aria-hidden="true" className="feixe sticky left-1/2 top-0 -mb-[100svh] h-svh -translate-x-1/2" />
       <div className="sticky top-0 flex h-svh flex-col items-center justify-center px-4 text-center">
         <h2 id="titulo-cta" className="titulo titulo-degrade sobre-3d max-w-[680px] text-6xl md:text-8xl">
           Pronto para <em>tirar</em> seu projeto do papel?

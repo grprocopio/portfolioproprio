@@ -1,17 +1,24 @@
+import { PalavraGiratoria } from "@/components/PalavraGiratoria";
 import { linkWhatsapp, redesAtivas, site } from "@/data/site";
 
 export function Rodape() {
   const ano = new Date().getFullYear();
   return (
-    <footer className="relative z-10 bg-fundo px-4 pb-8 pt-16 md:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-12 md:grid-cols-12">
+    <footer className="relative z-10 overflow-hidden bg-fundo px-4 pb-32 pt-24 md:px-8">
+      <div aria-hidden="true" className="feixe left-1/2 -translate-x-1/2" />
+      <div className="relative mx-auto max-w-7xl">
+        {/* O nome girando fecha a página (antes ficava no topo) */}
+        <div className="flex justify-center">
+          <PalavraGiratoria palavra="Procopio" />
+        </div>
+
+        <div className="mt-24 grid gap-12 md:grid-cols-12">
           <div className="md:col-span-6">
-            <p className="titulo text-4xl">{site.marca}</p>
+            <p className="text-2xl font-semibold tracking-tight text-forte">{site.nome}</p>
             <p className="mt-4 max-w-sm text-sm text-apagado">{site.descricao}</p>
           </div>
           <nav aria-label="Contato" className="md:col-span-3">
-            <h2 className="text-sm text-apagado">Contato</h2>
+            <h2 className="etiqueta">Contato</h2>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
                 <a href={linkWhatsapp} target="_blank" rel="noopener noreferrer" className="text-texto transition duration-300 ease-suave hover:text-forte">
@@ -28,7 +35,7 @@ export function Rodape() {
             </ul>
           </nav>
           <nav aria-label="Redes" className="md:col-span-3">
-            <h2 className="text-sm text-apagado">Redes</h2>
+            <h2 className="etiqueta">Redes</h2>
             <ul className="mt-4 space-y-2 text-sm">
               {redesAtivas.map((r) => (
                 <li key={r.nome}>

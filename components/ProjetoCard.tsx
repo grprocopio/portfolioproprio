@@ -11,17 +11,17 @@ export function Capa({ projeto, className = "" }: { projeto: ProjetoPublico; cla
         alt={`Página inicial do site ${projeto.nome}`}
         loading="lazy"
         decoding="async"
-        className={`h-full w-full object-cover object-top grayscale ${className}`}
+        className={`h-full w-full object-cover object-top ${className}`}
       />
     );
   }
   return (
     <div
       aria-hidden="true"
-      className={`relative grid h-full w-full place-items-center overflow-hidden bg-[#131313] ${className}`}
+      className={`relative grid h-full w-full place-items-center overflow-hidden bg-[#081030] ${className}`}
     >
-      <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent_0,transparent_11px,rgb(255_255_255/0.035)_11px,rgb(255_255_255/0.035)_12px)]" />
-      <span className="titulo relative px-6 text-center text-3xl text-white/80">{projeto.nome}</span>
+      <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent_0,transparent_11px,rgb(143_155_255/0.06)_11px,rgb(143_155_255/0.06)_12px)]" />
+      <span className="titulo relative px-6 text-center text-3xl text-[#c9d1f2] font-sans font-semibold tracking-tight">{projeto.nome}</span>
     </div>
   );
 }
@@ -34,7 +34,7 @@ export function ProjetoCard({ projeto, modo, aoAbrir }: Props) {
       <button
         type="button"
         onClick={() => aoAbrir(projeto.id)}
-        className="block w-full rounded-2xl border border-borda bg-superficie p-2 text-left transition duration-500 ease-suave hover:-translate-y-1 hover:border-borda-forte hover:bg-superficie-2 active:scale-[0.98]"
+        className="vidro block w-full rounded-2xl p-2 text-left transition duration-500 ease-suave hover:-translate-y-1 hover:border-destaque/60 hover:shadow-[0_0_40px_rgb(75_91_255/0.18)] active:scale-[0.98]"
         aria-haspopup="dialog"
       >
         <div className="aspect-[4/3] overflow-hidden rounded-lg">
