@@ -14,7 +14,7 @@ export const site = {
   redes: [
     { nome: "GitHub", url: "https://github.com/grprocopio" },
     { nome: "LinkedIn", url: "" }, // PREENCHER
-    { nome: "Instagram", url: "" }, // PREENCHER
+    { nome: "Instagram", url: "https://www.instagram.com/guiprocopioo/" },
   ],
   githubUsuario: "grprocopio",
   githubTopic: "portfolio",

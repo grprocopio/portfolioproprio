@@ -1,4 +1,12 @@
+import { GithubLogoIcon, InstagramLogoIcon, LinkedinLogoIcon } from "@phosphor-icons/react/dist/ssr";
+import type { ComponentType } from "react";
 import { linkWhatsapp, redesAtivas, site } from "@/data/site";
+
+const icones: Record<string, ComponentType<{ className?: string; weight?: "regular" | "bold" | "fill"; "aria-hidden"?: boolean }>> = {
+  GitHub: GithubLogoIcon,
+  Instagram: InstagramLogoIcon,
+  LinkedIn: LinkedinLogoIcon,
+};
 
 export function Rodape() {
   const ano = new Date().getFullYear();
@@ -31,8 +39,17 @@ export function Rodape() {
           <ul className="mt-4 space-y-2 text-sm">
             {redesAtivas.map((r) => (
               <li key={r.nome}>
-                <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-claro transition-opacity duration-200 hover:opacity-70">
-                  {r.nome}
+                <a
+                  href={r.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-claro transition-opacity duration-200 hover:opacity-70"
+                >
+                  {(() => {
+                    const Icone = icones[r.nome];
+                    return Icone ? <Icone aria-hidden className="size-5" /> : null;
+                  })()}
+                  {r.nome === "Instagram" ? "@guiprocopioo" : r.nome}
                 </a>
               </li>
             ))}
