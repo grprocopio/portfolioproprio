@@ -2,7 +2,7 @@
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { useLayoutEffect, useMemo, useRef } from "react";
-import { InstancedMesh, Mesh, Object3D, Quaternion } from "three";
+import { InstancedMesh, Mesh, MeshStandardMaterial, Object3D, Quaternion } from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { ESTADOS, escalaLamina, poseLamina } from "@/lib/fita";
 import { faseAtual, scrollState } from "@/lib/scroll-state";
@@ -14,6 +14,7 @@ type Props = { quantidade: number; animar: boolean };
 export function Fita({ quantidade, animar }: Props) {
   const malha = useRef<InstancedMesh>(null);
   const esfera = useRef<Mesh>(null);
+  const material = useRef<MeshStandardMaterial>(null);
   const viewport = useThree((s) => s.viewport.getCurrentViewport(s.camera, [0, 0, 0], s.size));
   const fase = useRef(0);
 
@@ -70,6 +71,8 @@ export function Fita({ quantidade, animar }: Props) {
       m.setMatrixAt(i, o.matrix);
     }
     m.instanceMatrix.needsUpdate = true;
+    // Na seção de projetos a coluna recua para os cards ficarem em primeiro plano
+    if (material.current) material.current.envMapIntensity = 1.3 - 0.95 * Math.max(0, 1 - Math.abs(f - 3));
     m.rotation.y = Math.sin(tempo * 0.25) * 0.06 + scrollState.ponteiro.x * 0.08;
     m.rotation.x = scrollState.ponteiro.y * 0.05;
 
@@ -97,7 +100,7 @@ export function Fita({ quantidade, animar }: Props) {
   return (
     <>
       <instancedMesh ref={malha} args={[geometria, undefined, quantidade]} frustumCulled={false}>
-        <meshStandardMaterial color="#ffffff" metalness={1} roughness={0.14} envMapIntensity={1.3} />
+        <meshStandardMaterial ref={material} color="#ffffff" metalness={1} roughness={0.14} envMapIntensity={1.3} />
       </instancedMesh>
       <mesh ref={esfera} position={[0, 0, -8]} scale={0} visible={false}>
         <sphereGeometry args={[1.15, 64, 64]} />

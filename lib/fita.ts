@@ -42,7 +42,7 @@ function coluna(i: number, n: number, vp: Viewport, lado: 1 | -1): Pose {
   const voltas = 4.5;
   const H = vp.h * 1.7;
   const r = clamp(vp.w * 0.085, 0.5, 1.2);
-  const cx = lado === 1 ? vp.w * 0.27 : -vp.w * 0.2;
+  const cx = lado === 1 ? vp.w * 0.27 : -vp.w * 0.06;
   const t = i / n;
   const w = voltas * TAU;
   const ang = t * w;

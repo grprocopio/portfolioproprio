@@ -95,6 +95,11 @@ export function tipos(ps: Pick<Projeto, "tipo">[]): string[] {
   return [...new Set(ps.map((p) => p.tipo))].sort((a, b) => a.localeCompare(b, "pt-BR"));
 }
 
+export const mesPorExtenso = (mes: string) => {
+  const [a, m] = mes.split("-").map(Number);
+  return new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" }).format(new Date(a, m - 1, 1));
+};
+
 export const nomeMes = (mes: string) => {
   const [a, m] = mes.split("-").map(Number);
   return new Intl.DateTimeFormat("pt-BR", { month: "short", year: "2-digit" }).format(new Date(a, m - 1, 1));

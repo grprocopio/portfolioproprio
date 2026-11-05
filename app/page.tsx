@@ -1,7 +1,9 @@
 import { Menu } from "@/components/Menu";
 import { RolagemSuave } from "@/components/RolagemSuave";
 import { Hero } from "@/components/sections/Hero";
+import { ProjetosVendidos } from "@/components/sections/ProjetosVendidos";
 import { Sobre } from "@/components/sections/Sobre";
+import { site } from "@/data/site";
 import { CenaLoader } from "@/components/three/CenaLoader";
 import { resumo } from "@/lib/projetos";
 import { carregarProjetos, temExemplos } from "@/lib/projetos-servidor";
@@ -20,7 +22,7 @@ export default function Home() {
       <main id="conteudo" className="relative z-10">
         <Hero entregues={r.quantidade} desde={desde} />
         <Sobre resumo={r} exemplos={temExemplos} />
-        <section id="projetos" className="min-h-[200svh]" />
+        <ProjetosVendidos projetos={projetos} modo={site.modoValores} exemplos={temExemplos} />
         <section id="contato" className="min-h-[150svh]" />
       </main>
     </>

@@ -23,8 +23,8 @@ describe("poseLamina", () => {
     for (const p of todas("colunaDireita")) expect(p.p[0]).toBeGreaterThan(0);
   });
 
-  it("colunaEsquerda fica toda à esquerda do centro da tela", () => {
-    for (const p of todas("colunaEsquerda")) expect(p.p[0]).toBeLessThan(0);
+  it("colunaEsquerda tem o eixo à esquerda do centro da tela", () => {
+    expect(centro(todas("colunaEsquerda"))[0]).toBeLessThan(0);
   });
 
   it("tunel: lâminas em volta do eixo z, a distância constante dele", () => {
