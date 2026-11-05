@@ -75,7 +75,9 @@ export function Fita({ quantidade, animar }: Props) {
     if (material.current) {
       const recuo = Math.max(0, 1 - Math.abs(f - 3));
       material.current.envMapIntensity = 1.3 - 0.8 * recuo;
-      material.current.color.setScalar(1 - 0.6 * recuo);
+      // Em tela em pé o texto passa por cima da coluna: escurece mais nas seções de leitura
+      const leitura = viewport.width < viewport.height ? Math.min(1, Math.max(0, f - 1)) * Math.min(1, Math.max(0, 4 - f)) : 0;
+      material.current.color.setScalar((1 - 0.6 * recuo) * (1 - 0.5 * leitura));
     }
     m.rotation.y = Math.sin(tempo * 0.25) * 0.06 + scrollState.ponteiro.x * 0.08;
     m.rotation.x = scrollState.ponteiro.y * 0.05;

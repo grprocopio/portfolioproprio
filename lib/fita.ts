@@ -28,10 +28,11 @@ function pose(ponto: Vector3, tangente: Vector3, radial: Vector3): Pose {
 }
 
 function anel(i: number, n: number, vp: Viewport, perto: boolean): Pose {
-  const R = clamp(Math.min(vp.w * 0.62, vp.h * 0.7), 1.6, 4.5);
+  const retrato = vp.w < vp.h;
+  const R = retrato ? vp.w * 0.8 : clamp(Math.min(vp.w * 0.62, vp.h * 0.7), 1.6, 4.5);
   const a = (i / n) * TAU;
   const rot = perto ? new Euler(-0.35, 0.65, 0.4) : new Euler(-1.12, 0, 0.08);
-  const centro = perto ? new Vector3(0, -vp.h * 0.12, 2.6) : new Vector3(0, -vp.h * 0.6, -1.2);
+  const centro = perto ? new Vector3(0, -vp.h * 0.12, 2.6) : new Vector3(0, -vp.h * (retrato ? 0.5 : 0.6), -1.2);
   const ponto = new Vector3(R * Math.cos(a), R * Math.sin(a), 0).applyEuler(rot).add(centro);
   const tangente = new Vector3(-Math.sin(a), Math.cos(a), 0).applyEuler(rot);
   const radial = new Vector3(Math.cos(a), Math.sin(a), 0).applyEuler(rot);
@@ -42,7 +43,9 @@ function coluna(i: number, n: number, vp: Viewport, lado: 1 | -1): Pose {
   const voltas = 4.5;
   const H = vp.h * 1.7;
   const r = clamp(vp.w * 0.085, 0.5, 1.2);
-  const cx = lado === 1 ? vp.w * 0.27 : -vp.w * 0.06;
+  // Em tela em pé a coluna fica na borda, meio fora da tela, para não cobrir o texto
+  const retrato = vp.w < vp.h;
+  const cx = lado === 1 ? vp.w * (retrato ? 0.48 : 0.27) : -vp.w * (retrato ? 0.48 : 0.06);
   const t = i / n;
   const w = voltas * TAU;
   const ang = t * w;
