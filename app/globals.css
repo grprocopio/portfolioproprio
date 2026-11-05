@@ -168,20 +168,24 @@ p {
 }
 .pg-fatia {
   position: absolute;
-  inset: 0;
+  top: -20%;
+  bottom: -20%;
   transform-style: preserve-3d;
   animation-name: pg-girar;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  will-change: transform;
 }
 .pg-face {
   position: absolute;
   inset: 0;
-  /* O recorte fica nas faces: clip-path na fatia achataria o 3D e quebraria o verso */
-  clip-path: var(--recorte);
+  overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+}
+.pg-texto {
+  position: absolute;
+  top: 14.2857%; /* 20% de sobra ÷ 140% de altura da fatia */
+  white-space: nowrap;
 }
 .pg-frente {
   color: #ffffff;
