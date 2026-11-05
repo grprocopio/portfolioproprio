@@ -10,6 +10,9 @@ const links = [
   { href: linkWhatsapp, rotulo: "Contato", externo: true },
 ];
 
+const tituloClasse = "w-full whitespace-nowrap text-center font-black uppercase leading-none tracking-tight";
+const tituloEstilo = { fontSize: "min(20vw, 42vh)" };
+
 export function Hero() {
   return (
     <section id="topo" aria-labelledby="titulo-hero" className="relative flex h-svh min-h-[560px] flex-col" style={{ overflowX: "clip" }}>
@@ -29,21 +32,31 @@ export function Hero() {
         </ul>
       </FadeIn>
 
-      <div className="overflow-hidden">
-        <FadeIn
-          as="h1"
-          id="titulo-hero"
-          delay={0.15}
-          y={40}
-          className="hero-heading mt-6 w-full whitespace-nowrap text-center font-black uppercase leading-none tracking-tight sm:mt-4 md:-mt-5"
-          style={{ fontSize: "min(11.4vw, 30vh)" }}
-        >
-          Oi, sou Procopio
-        </FadeIn>
-      </div>
+      {/*
+        PROCOPIO em duas camadas sobrepostas, com a mesma caixa:
+        - atrás do personagem (z-0): "PRO" e "PIO" em branco sólido;
+        - na frente do personagem (z-20): só o "CO" em contorno branco.
+      */}
+      <FadeIn delay={0.15} y={40} className="pointer-events-none absolute inset-x-0 top-0 h-full">
+        <div className="relative overflow-hidden pt-16 sm:pt-16 md:pt-14 lg:pt-16">
+          <h1 id="titulo-hero" className={`${tituloClasse} relative z-0 text-white`} style={tituloEstilo}>
+            <span className="sr-only">Procopio</span>
+            <span aria-hidden="true">
+              PRO<span className="text-transparent">CO</span>PIO
+            </span>
+          </h1>
+        </div>
+      </FadeIn>
+      <FadeIn delay={0.15} y={40} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-20 h-full">
+        <div className="relative overflow-hidden pt-16 sm:pt-16 md:pt-14 lg:pt-16">
+          <p className={`${tituloClasse} text-transparent`} style={tituloEstilo}>
+            PRO<span className="contorno-branco">CO</span>PIO
+          </p>
+        </div>
+      </FadeIn>
 
       {/* Personagem: posição no invólucro, animação no filho (o transform do FadeIn não briga com o translate) */}
-      <div className="absolute left-1/2 top-1/2 z-10 w-[280px] -translate-x-1/2 -translate-y-1/2 sm:bottom-0 sm:top-auto sm:w-[360px] sm:translate-y-0 md:w-[440px] lg:w-[520px]">
+      <div className="absolute left-1/2 top-[7svh] z-10 w-[min(320px,84vw)] -translate-x-1/2 sm:bottom-0 sm:top-auto sm:w-[360px] md:w-[440px] lg:w-[520px]">
         <FadeIn delay={0.6} y={30}>
           <Ima alcance={150} forca={3}>
             {/* eslint-disable-next-line @next/next/no-img-element */}

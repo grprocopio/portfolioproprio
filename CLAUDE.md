@@ -28,7 +28,7 @@ Portfólio pessoal de desenvolvedor freelancer. Mostra os sites/projetos que ven
 
 Site de uso pessoal (decisão do usuário de 2026-11-05: "vai ser só para mim").
 
-1. **Hero:** menu (Saldo, Projetos, Adicionar, Contato no WhatsApp), "Oi, sou Procopio" gigante, frase curta, botão "Fale comigo", personagem magnético.
+1. **Hero:** menu (Saldo, Projetos, Adicionar, Contato no WhatsApp), "PROCOPIO" gigante (PRO e PIO brancos atrás do personagem; CO só com contorno branco, na frente dele), frase curta, botão "Fale comigo", personagem magnético.
 2. **Ganhos:** "O que já ganhei" com o saldo total (soma das vendas, com contagem), cartões dos projetos (print automático, nome, link, valor, remover) e o formulário "Adicionar projeto" (link do site na Vercel + "Por quanto você vendeu?" + nome opcional).
 3. **Rodapé:** contato, redes, privacidade.
 
@@ -68,3 +68,4 @@ Estados de carregamento e erro (se uma API falhar, o resto do site continua func
 - **2026-11-05 — WhatsApp:** usuário informou 55991009800 (DDD 55 + 99100-9800); no link vai com o DDI do Brasil: `5555991009800`.
 - **2026-11-05 — Site reduzido a hero + ganhos (pedido do usuário):** saíram faixa, Sobre, Serviços, cartões empilhados, projetos do GitHub e `data/projetos.json` de exemplo. Projetos entram pelo formulário do próprio site (link da Vercel + valor da venda) e ficam no Upstash Redis, em qualquer aparelho.
 - **2026-11-05 — Instagram:** @guiprocopioo (https://www.instagram.com/guiprocopioo/), no rodapé com o ícone do Phosphor.
+- **2026-11-05 — Título do hero:** só "PROCOPIO" (pedido do usuário). Duas camadas sobrepostas com a mesma caixa: atrás do personagem, PRO e PIO brancos; na frente, só o CO em contorno branco (`.contorno-branco`). No celular o personagem sobe (topo a 7svh, 320 px) para a cabeça cruzar o CO.

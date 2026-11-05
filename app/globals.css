@@ -118,3 +118,9 @@ p {
   background: #121212;
   border: 1px solid var(--color-borda);
 }
+
+/* Letras só com contorno branco (o "CO" do PROCOPIO, na frente do personagem) */
+.contorno-branco {
+  color: transparent;
+  -webkit-text-stroke: clamp(1.5px, 0.22vw, 4px) #ffffff;
+}
