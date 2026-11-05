@@ -8,8 +8,7 @@ export const site = {
   descricao:
     "Desenvolvedor freelancer. Sites e sistemas web sob medida para empresas que precisam vender pela internet.",
   url: "https://portfolioproprio.vercel.app", // PREENCHER: domínio final
-  // PREENCHER: número com DDI e DDD, só dígitos. Ex.: 5511999999999
-  whatsapp: "5500000000000",
+  whatsapp: "5555991009800", // DDI 55 + DDD 55 + 99100-9800
   mensagemWhatsapp: "Olá, Guilherme. Vi seu portfólio e quero conversar sobre um projeto.",
   email: "", // PREENCHER (fica oculto enquanto vazio)
   redes: [
