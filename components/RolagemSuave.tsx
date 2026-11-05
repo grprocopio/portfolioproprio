@@ -10,10 +10,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 /** Trechos do scroll que movem a fita de um estado ao próximo */
 const trechos: { trigger: string; start: string; end: string }[] = [
-  { trigger: "#topo", start: "top top", end: "bottom 60%" }, // anel → anel perto, girando
-  { trigger: "#sobre", start: "top 95%", end: "top 40%" }, // → coluna à direita
-  { trigger: "#projetos", start: "top 85%", end: "top 25%" }, // → coluna à esquerda
-  { trigger: "#contato", start: "top bottom", end: "top top" }, // → túnel
+  { trigger: "#sobre", start: "top bottom", end: "top 30%" }, // nome → espiral
+  { trigger: "#projetos", start: "top 85%", end: "top 25%" }, // espiral → nuvem
+  { trigger: "#contato", start: "top bottom", end: "top top" }, // nuvem → túnel
 ];
 
 export function RolagemSuave() {

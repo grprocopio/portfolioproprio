@@ -21,11 +21,11 @@ export default function Home() {
   return (
     <>
       <RolagemSuave />
-      <CenaLoader />
+      <CenaLoader palavra="PROCOPIO" />
       <div className="vinheta" aria-hidden="true" />
       <Menu />
       <main id="conteudo" className="relative z-10">
-        <Hero />
+        <Hero palavra="PROCOPIO" />
         <Sobre resumo={r} exemplos={temExemplos} />
         <ProjetosVendidos projetos={projetos} modo={site.modoValores} exemplos={temExemplos} />
         <Suspense fallback={<ProjetosPropriosCarregando />}>

@@ -208,3 +208,23 @@ p {
     animation: none;
   }
 }
+
+/* Nome estático da hero: some quando as partículas assumem */
+.nome-estatico {
+  display: block;
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 800;
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
+  font-size: clamp(2.5rem, 13vw, 13rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #e6e9ff;
+  text-shadow:
+    0 0 24px rgb(75 91 255 / 0.65),
+    0 0 80px rgb(75 91 255 / 0.35);
+  transition: opacity 1s var(--ease-suave);
+}
+html[data-fita="3d"] .nome-estatico {
+  opacity: 0;
+}
