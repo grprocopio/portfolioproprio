@@ -15,7 +15,7 @@ export function Hero({ entregues, desde }: Props) {
         <br />
         resultado.
       </h1>
-      <p className="entrada mt-6 max-w-[560px] text-base text-texto md:text-lg" style={{ animationDelay: "120ms" }}>
+      <p className="entrada sobre-3d-texto mt-6 max-w-[560px] text-base text-texto md:text-lg" style={{ animationDelay: "120ms" }}>
         Sou desenvolvedor freelancer. Faço sites e sistemas sob medida para empresas que querem vender mais pela
         internet, com você falando direto comigo do começo ao fim.
       </p>

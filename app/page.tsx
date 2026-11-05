@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 import { Menu } from "@/components/Menu";
+import { Rodape } from "@/components/Rodape";
+import { Cta } from "@/components/sections/Cta";
 import { ProjetosProprios, ProjetosPropriosCarregando } from "@/components/sections/ProjetosProprios";
 import { RolagemSuave } from "@/components/RolagemSuave";
 import { Hero } from "@/components/sections/Hero";
@@ -30,8 +32,9 @@ export default function Home() {
         <Suspense fallback={<ProjetosPropriosCarregando />}>
           <ProjetosProprios />
         </Suspense>
-        <section id="contato" className="min-h-[150svh]" />
+        <Cta />
       </main>
+      <Rodape />
     </>
   );
 }

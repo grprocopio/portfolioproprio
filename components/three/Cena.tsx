@@ -18,8 +18,8 @@ function Estudio() {
       <Lightformer form="rect" intensity={4} position={[-7, 1.5, 2]} rotation-y={Math.PI / 2} scale={[1.2, 10, 1]} />
       <Lightformer form="rect" intensity={1.6} position={[7, -0.5, -1]} rotation-y={-Math.PI / 2} scale={[0.6, 7, 1]} />
       <Lightformer form="rect" intensity={1.2} position={[4.5, 2, 6]} rotation-y={-Math.PI / 4} scale={[0.5, 6, 1]} />
-      {/* Painel suave atrás da câmera: ilumina o túnel e a esfera */}
-      <Lightformer form="rect" intensity={0.9} position={[-1.5, 2.5, 12]} rotation-y={Math.PI} scale={[9, 2.5, 1]} />
+      {/* Painel atrás da câmera, fora do eixo: ilumina o túnel sem desenhar formas no centro da esfera */}
+      <Lightformer form="rect" intensity={1.1} position={[-6, -3.5, 11]} rotation-y={Math.PI * 0.85} rotation-z={0.6} scale={[7, 1.6, 1]} />
       <Lightformer form="rect" intensity={0.5} position={[0, -6, 2]} rotation-x={-Math.PI / 2} scale={[10, 1, 1]} />
     </Environment>
   );

@@ -72,7 +72,11 @@ export function Fita({ quantidade, animar }: Props) {
     }
     m.instanceMatrix.needsUpdate = true;
     // Na seção de projetos a coluna recua para os cards ficarem em primeiro plano
-    if (material.current) material.current.envMapIntensity = 1.3 - 0.95 * Math.max(0, 1 - Math.abs(f - 3));
+    if (material.current) {
+      const recuo = Math.max(0, 1 - Math.abs(f - 3));
+      material.current.envMapIntensity = 1.3 - 0.8 * recuo;
+      material.current.color.setScalar(1 - 0.6 * recuo);
+    }
     m.rotation.y = Math.sin(tempo * 0.25) * 0.06 + scrollState.ponteiro.x * 0.08;
     m.rotation.x = scrollState.ponteiro.y * 0.05;
 
@@ -104,7 +108,7 @@ export function Fita({ quantidade, animar }: Props) {
       </instancedMesh>
       <mesh ref={esfera} position={[0, 0, -8]} scale={0} visible={false}>
         <sphereGeometry args={[1.15, 64, 64]} />
-        <meshStandardMaterial color="#ffffff" metalness={1} roughness={0.22} envMapIntensity={1.4} />
+        <meshStandardMaterial color="#ffffff" metalness={1} roughness={0.32} envMapIntensity={1.2} />
       </mesh>
     </>
   );

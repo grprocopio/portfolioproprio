@@ -7,12 +7,12 @@ const perfil = `https://github.com/${site.githubUsuario}`;
 
 function Cabecalho() {
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-md">
       <p className="text-sm text-apagado">Projetos próprios</p>
       <h2 id="titulo-proprios" className="titulo mt-4 text-5xl md:text-6xl">
         O que eu construo por <em>conta</em> própria.
       </h2>
-      <p className="mt-6 max-w-lg text-base text-texto">
+      <p className="mt-6 max-w-sm text-base text-texto">
         Experimentos e ferramentas que publico no GitHub. Atualizados sozinhos a cada hora.
       </p>
     </div>

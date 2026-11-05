@@ -139,3 +139,11 @@ p {
     animation: none;
   }
 }
+
+/* Legibilidade sobre o 3D: sombra suave atrás do texto */
+.sobre-3d {
+  filter: drop-shadow(0 4px 24px rgb(0 0 0 / 0.85));
+}
+.sobre-3d-texto {
+  text-shadow: 0 1px 16px rgb(0 0 0 / 0.9);
+}
