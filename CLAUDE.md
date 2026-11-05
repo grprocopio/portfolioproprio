@@ -26,22 +26,19 @@ Portfólio pessoal de desenvolvedor freelancer. Mostra os sites/projetos que ven
 
 ## Seções
 
-1. **Hero:** menu (Sobre, Serviços, Projetos, Contato), "Oi, sou Procopio" gigante, frase curta, botão "Fale comigo", personagem magnético.
-2. **Faixa de projetos:** duas fileiras de prints dos projetos dele andando com a rolagem.
-3. **Sobre:** "Sobre mim", texto revelado letra por letra, números de resultado com contagem.
-4. **Serviços:** fundo branco, 5 serviços numerados.
-5. **Projetos:** cartões empilhados com sticky (projetos vendidos de `data/projetos.json`), depois projetos próprios do GitHub/Vercel.
-6. **Contato e rodapé:** "Pronto para tirar seu projeto do papel?" + WhatsApp; contato, redes, privacidade.
+Site de uso pessoal (decisão do usuário de 2026-11-05: "vai ser só para mim").
+
+1. **Hero:** menu (Saldo, Projetos, Adicionar, Contato no WhatsApp), "Oi, sou Procopio" gigante, frase curta, botão "Fale comigo", personagem magnético.
+2. **Ganhos:** "O que já ganhei" com o saldo total (soma das vendas, com contagem), cartões dos projetos (print automático, nome, link, valor, remover) e o formulário "Adicionar projeto" (link do site na Vercel + "Por quanto você vendeu?" + nome opcional).
+3. **Rodapé:** contato, redes, privacidade.
 
 ## Dados
 
-- **Stack:** Next.js (App Router) + Tailwind, deploy na Vercel. Dados buscados no servidor, revalidação a cada 1h.
-- **Vendas:** `data/projetos.json` (preenchido à mão). Campos: `nome`, `cliente` (opcional), `exibir_cliente` (true/false), `tipo`, `valor`, `data`, `prazo`, `stack`, `link`, `imagem`, `repositorio` (opcional), `depoimento` (opcional).
-- **GitHub:** usuário `grprocopio`. Mostrar repos públicos com o topic `portfolio`. Repos privados de clientes: só metadados, nunca código.
-- **Vercel:** API com token para listar projetos e domínios.
-- **Tokens:** só em variáveis de ambiente (configuradas na Vercel). Nunca no código, nunca no cliente.
-- **Valores:** ainda não definido (exatos ou em faixas). Perguntar ao usuário antes de implementar o painel de resultados.
-- **Privacidade:** só mostrar o nome do cliente quando `exibir_cliente` for true.
+- **Stack:** Next.js (App Router) + Tailwind, deploy na Vercel.
+- **Projetos vendidos:** guardados no Upstash Redis (integração gratuita da Vercel; variáveis `KV_REST_API_URL`/`KV_REST_API_TOKEN` ou `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN`), hash `portfolio:ganhos`. Campos: `id`, `link`, `nome`, `valor`, `criadoEm`. Leitura e escrita só no servidor (`lib/armazem.ts`, server actions em `app/acoes.ts`); a página é dinâmica e o salvar revalida na hora. `ARMAZEM_MEMORIA=1` liga um banco em memória só para testes locais.
+- **Valores:** exatos, em reais (o usuário digita quanto vendeu). `lib/ganhos.ts` entende "4850", "4.850", "R$ 4.850,00".
+- **Sem senha:** o usuário decidiu que ninguém mais acessa; qualquer pessoa com o link pode adicionar/remover. Se isso mudar, proteger o formulário.
+- **Tokens:** só em variáveis de ambiente (Vercel). Nunca no código, nunca no cliente.
 
 ## Qualidade
 
@@ -69,3 +66,4 @@ Estados de carregamento e erro (se uma API falhar, o resto do site continua func
 - **2026-11-05 — Rosto em partículas (pedido do usuário, com foto dele):** substitui o DNA no Sobre. `public/rosto.png` (197×215, tons de cinza + alfa) foi gerado de uma foto enviada pelo usuário: recorte só do rosto dele (a outra pessoa da foto nunca entrou no repositório), fundo removido com rembg (`u2net_human_seg`), corte abaixo do queixo, máscara oval e contraste local realçado. `amostrarImagem` pesa os pixels por alfa × brilho^2,6 (traços aparecem por contraste de densidade); `formaRosto` dá volume com curvatura oval + brilho; o brilho de cada partícula vem da foto (luz e sombra). Sem a imagem, cai na espiral. Partículas: 36 mil/15 mil (3D), 5 mil/2,8 mil (2D). Para trocar o rosto: gerar um novo `public/rosto.png` com o mesmo tratamento.
 - **2026-11-05 — Layout do template de criador 3D (substitui partículas, rosto, PROCOPIO girando, Geist, marinho/índigo e o gráfico mensal):** escolhas do usuário: cores do template e tirar todas as partículas. Removidos three/R3F/drei/GSAP e os motores de partículas. O gráfico de faturamento por mês saiu (o template mostra só os números). Objetos 3D decorativos do "Sobre" ficam de fora até o usuário gerar os dele (as imagens do template eram de terceiros).
 - **2026-11-05 — WhatsApp:** usuário informou 55991009800 (DDD 55 + 99100-9800); no link vai com o DDI do Brasil: `5555991009800`.
+- **2026-11-05 — Site reduzido a hero + ganhos (pedido do usuário):** saíram faixa, Sobre, Serviços, cartões empilhados, projetos do GitHub e `data/projetos.json` de exemplo. Projetos entram pelo formulário do próprio site (link da Vercel + valor da venda) e ficam no Upstash Redis, em qualquer aparelho.

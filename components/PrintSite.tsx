@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { printUrl } from "@/lib/proprios";
+import { printUrl } from "@/lib/ganhos";
 
 /** Print automático do site; se o serviço falhar ou não houver link, mostra uma capa tipográfica. */
 export function PrintSite({ link, nome }: { link?: string; nome: string }) {

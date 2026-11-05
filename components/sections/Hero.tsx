@@ -1,13 +1,13 @@
 import { FadeIn } from "@/components/anim/FadeIn";
 import { Ima } from "@/components/anim/Ima";
 import { BotaoContato } from "@/components/ui/Botao";
-import { site } from "@/data/site";
+import { linkWhatsapp, site } from "@/data/site";
 
 const links = [
-  { href: "#sobre", rotulo: "Sobre" },
-  { href: "#servicos", rotulo: "Serviços" },
-  { href: "#projetos", rotulo: "Projetos" },
-  { href: "#contato", rotulo: "Contato" },
+  { href: "#ganhos", rotulo: "Saldo", externo: false },
+  { href: "#projetos", rotulo: "Projetos", externo: false },
+  { href: "#adicionar", rotulo: "Adicionar", externo: false },
+  { href: linkWhatsapp, rotulo: "Contato", externo: true },
 ];
 
 export function Hero() {
@@ -19,6 +19,7 @@ export function Hero() {
             <li key={l.href}>
               <a
                 href={l.href}
+                {...(l.externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className="text-sm font-medium uppercase tracking-wider text-claro transition-opacity duration-200 hover:opacity-70 md:text-lg lg:text-[1.4rem]"
               >
                 {l.rotulo}
