@@ -26,7 +26,9 @@ function Estudio() {
 }
 
 export default function Cena({ movel, animar, aoCarregar }: Props) {
-  const [dpr, setDpr] = useState(movel ? 1.25 : 1.75);
+  // DIAGNÓSTICO TEMPORÁRIO
+  const q = typeof window !== "undefined" ? new URLSearchParams(location.search) : null;
+  const [dpr, setDpr] = useState(q?.get("dpr") ? Number(q.get("dpr")) : movel ? 1.25 : 1.75);
 
   return (
     <Canvas
@@ -40,7 +42,7 @@ export default function Cena({ movel, animar, aoCarregar }: Props) {
       }}
     >
       <fog attach="fog" args={["#0a0a0a", 12, 30]} />
-      <PerformanceMonitor onDecline={() => setDpr(1)} onIncline={() => setDpr(movel ? 1.5 : 2)} flipflops={2} />
+      {!q?.get("dpr") && <PerformanceMonitor onDecline={() => setDpr(1)} onIncline={() => setDpr(movel ? 1.5 : 2)} flipflops={2} />}
       <Estudio />
       <Fita quantidade={movel ? 150 : 320} animar={animar} />
     </Canvas>
