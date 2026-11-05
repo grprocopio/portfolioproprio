@@ -147,3 +147,60 @@ p {
 .sobre-3d-texto {
   text-shadow: 0 1px 16px rgb(0 0 0 / 0.9);
 }
+
+/* Palavra giratória da hero (tipografia cinética em CSS 3D) */
+.palavra-giratoria {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 800;
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
+  font-size: clamp(2.5rem, 13vw, 13rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  perspective: 1200px;
+  white-space: nowrap;
+}
+.pg-medida {
+  visibility: hidden;
+}
+.pg-fatia {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation-name: pg-girar;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+.pg-face {
+  position: absolute;
+  inset: 0;
+  /* O recorte fica nas faces: clip-path na fatia achataria o 3D e quebraria o verso */
+  clip-path: var(--recorte);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.pg-frente {
+  color: #ffffff;
+}
+.pg-verso {
+  color: transparent;
+  -webkit-text-stroke: 0.018em #d4d4d4;
+  transform: rotateX(180deg);
+}
+@keyframes pg-girar {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pg-fatia {
+    animation: none;
+  }
+}

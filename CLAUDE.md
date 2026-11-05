@@ -37,7 +37,7 @@ Respeitar `prefers-reduced-motion` (versão estática). No mobile, 3D mais leve 
 
 ## Seções
 
-1. **Hero:** "Sites que *geram* resultado." + subtítulo + botões "Ver projetos" e "Fale comigo".
+1. **Hero:** só a palavra "PROCOPIO" em tipografia cinética girando (decisão de 2026-11-05, substitui o título, subtítulo e botões).
 2. **Sobre + Resultados:** texto curto sobre mim; números animados (contagem ao aparecer) de faturamento total, projetos entregues e ticket médio; gráfico de faturamento por mês, monocromático.
 3. **Projetos vendidos:** grade de cards escuros com print do site, nome, tipo e valor; filtro por tipo; clique abre detalhe (stack, prazo, link no ar, depoimento).
 4. **Projetos próprios:** puxados do GitHub e da Vercel, com print gerado automaticamente.
@@ -71,3 +71,4 @@ Estados de carregamento e erro (se uma API falhar, o resto do site continua func
 - **Print automático:** microlink direto no `<img>`, com capa tipográfica se falhar.
 - **Pendências do usuário:** valores exatos ou em faixa (`site.modoValores` em `data/site.ts`, hoje "exato"), número do WhatsApp, e-mail, LinkedIn/Instagram, domínio final, projetos reais (os atuais têm `"exemplo": true`), env `VERCEL_TOKEN` (e `GITHUB_TOKEN` opcional) na Vercel.
 - **Verificação:** local com Playwright (SwiftShader, sem GPU: FPS medido não vale) + prévia da Vercel.
+- **2026-11-05 — Hero:** pedido do usuário: no lugar de título/subtítulo/botões, só "PROCOPIO" girando no estilo da referência enviada (palavra fatiada que torce em torno de um eixo horizontal; frente preenchida, verso só contorno). Fonte larga Archivo (wdth 125, peso 800), só nessa palavra. CSS 3D puro (`components/PalavraGiratoria.tsx`), sem JS por quadro. A faixa vermelha da referência ficou de fora: paleta continua só preto/cinza/branco. Com movimento reduzido, a palavra fica parada. O `<h1>` mantém um texto oculto para leitores de tela e SEO.

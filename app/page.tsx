@@ -17,7 +17,6 @@ export const revalidate = 3600;
 export default function Home() {
   const projetos = carregarProjetos();
   const r = resumo(projetos);
-  const desde = r.porMes[0]?.mes.slice(0, 4) ?? String(new Date().getFullYear());
 
   return (
     <>
@@ -26,7 +25,7 @@ export default function Home() {
       <div className="vinheta" aria-hidden="true" />
       <Menu />
       <main id="conteudo" className="relative z-10">
-        <Hero entregues={r.quantidade} desde={desde} />
+        <Hero />
         <Sobre resumo={r} exemplos={temExemplos} />
         <ProjetosVendidos projetos={projetos} modo={site.modoValores} exemplos={temExemplos} />
         <Suspense fallback={<ProjetosPropriosCarregando />}>

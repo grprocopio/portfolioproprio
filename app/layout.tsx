@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Inter } from "next/font/google";
+import { Archivo, Instrument_Serif, Inter } from "next/font/google";
 import "./globals.css";
 import { site } from "@/data/site";
 
@@ -10,6 +10,8 @@ const serif = Instrument_Serif({
   variable: "--font-instrument",
   display: "swap",
 });
+
+const larga = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" });
 
 const sans = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
@@ -32,7 +34,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${serif.variable} ${sans.variable}`}>
+    <html lang="pt-BR" className={`${serif.variable} ${sans.variable} ${larga.variable}`}>
       <body>
         <a
           href="#conteudo"
