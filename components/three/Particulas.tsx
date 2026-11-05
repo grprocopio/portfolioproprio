@@ -139,7 +139,7 @@ export function Particulas({ quantidade, texto, aoPronto }: Props) {
   useEffect(() => {
     material.uniforms.uEscala.value = (alturaPx * dpr) / (2 * Math.tan(((FOV / 2) * Math.PI) / 180));
     // Tela estreita: pontos menores, senão as letras do nome viram borrões
-    material.uniforms.uTam.value = 0.03 * Math.min(1, Math.max(0.5, vw / 10));
+    material.uniforms.uTam.value = 0.026 * Math.min(1, Math.max(0.5, vw / 10));
   }, [alturaPx, dpr, vw, material]);
 
   useEffect(() => {

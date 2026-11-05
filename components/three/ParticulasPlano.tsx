@@ -24,7 +24,7 @@ export function ParticulasPlano({ movel, texto, aoPronto }: Props) {
     const ctx = canvas?.getContext("2d", { alpha: false });
     if (!canvas || !ctx) return;
 
-    const n = movel ? 2200 : 4200;
+    const n = movel ? 2800 : 5000;
     let largura = 0;
     let altura = 0;
     let formas: Float32Array[] = [];

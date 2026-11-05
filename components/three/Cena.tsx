@@ -19,7 +19,7 @@ export default function Cena({ movel, texto, aoCarregar }: Props) {
       onCreated={({ gl }) => gl.setClearColor("#050816")}
     >
       <Particulas
-        quantidade={movel ? 9000 : 22000}
+        quantidade={movel ? 15000 : 36000}
         texto={texto}
         aoPronto={aoCarregar}
       />
