@@ -1,21 +1,30 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { Component, useCallback, useEffect, useState, type ReactNode } from "react";
 import { amostrarTexto, type Ponto2D } from "@/lib/particulas";
+import { ParticulasPlano } from "./ParticulasPlano";
 
 const Cena = dynamic(() => import("./Cena"), { ssr: false });
 
-type Modo = { tipo: "3d"; movel: boolean; texto: Ponto2D[] } | { tipo: "estatico"; motivo: string };
+type Modo = { motor: "3d" | "2d"; movel: boolean; texto: Ponto2D[] };
 
-function temWebGL() {
+/**
+ * Escolhe o motor: WebGL com placa de vídeo de verdade → 3D na GPU.
+ * Sem WebGL, ou WebGL desenhado por software (aceleração desligada, driver bloqueado) → motor 2D,
+ * que nesse caso é mais fluido (medido: 60 fps no 2D contra ~35 no WebGL por software).
+ */
+function escolherMotor(): "3d" | "2d" {
   try {
     const c = document.createElement("canvas");
-    const ctx = c.getContext("webgl2") || c.getContext("webgl");
-    (ctx as WebGLRenderingContext | null)?.getExtension("WEBGL_lose_context")?.loseContext();
-    return Boolean(ctx);
+    const ctx = (c.getContext("webgl2") || c.getContext("webgl")) as WebGLRenderingContext | null;
+    if (!ctx) return "2d";
+    const ext = ctx.getExtension("WEBGL_debug_renderer_info");
+    const nome = String(ext ? ctx.getParameter(ext.UNMASKED_RENDERER_WEBGL) : ctx.getParameter(ctx.RENDERER));
+    ctx.getExtension("WEBGL_lose_context")?.loseContext();
+    return /swiftshader|llvmpipe|software|basic render/i.test(nome) ? "2d" : "3d";
   } catch {
-    return false;
+    return "2d";
   }
 }
 
@@ -50,37 +59,49 @@ async function amostrarNome(palavra: string): Promise<Ponto2D[]> {
   return amostrarTexto(ctx.getImageData(0, 0, W, H).data, W, H, 2);
 }
 
+/** Se o WebGL falhar depois de montar (contexto recusado, driver quebrado), troca para o canvas 2D. */
+class SeFalhar extends Component<{ aoFalhar: () => void; children: ReactNode }, { falhou: boolean }> {
+  state = { falhou: false };
+  static getDerivedStateFromError() {
+    return { falhou: true };
+  }
+  componentDidCatch() {
+    this.props.aoFalhar();
+  }
+  render() {
+    return this.state.falhou ? null : this.props.children;
+  }
+}
+
 /**
- * Partículas sempre ligadas (decisão do usuário): não há teste de desempenho nem respeito a
- * "menos movimento". A única exceção é navegador sem WebGL, onde é impossível desenhar o 3D:
- * fica o nome estático com brilho, que já vem no HTML.
+ * Partículas sempre ligadas (decisão do usuário): sem teste de desempenho e sem respeito a
+ * "menos movimento". Com WebGL, motor 3D na GPU; sem WebGL (ou se ele falhar), motor reserva
+ * em canvas 2D com as mesmas formas. Em nenhum caso a página fica sem animação.
  */
 export function CenaLoader({ palavra }: { palavra: string }) {
   const [modo, setModo] = useState<Modo | null>(null);
   const [pronta, setPronta] = useState(false);
+  const aoPronto = useCallback(() => setPronta(true), []);
 
   useEffect(() => {
     let cancelado = false;
-    if (!temWebGL()) {
-      setModo({ tipo: "estatico", motivo: "sem-webgl" });
-      return;
-    }
     const movel = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
-    amostrarNome(palavra).then((texto) => {
-      if (!cancelado) setModo({ tipo: "3d", movel, texto });
-    });
+    const motor = escolherMotor();
+    amostrarNome(palavra)
+      .catch(() => [] as Ponto2D[])
+      .then((texto) => {
+        if (!cancelado) setModo({ motor, movel, texto });
+      });
     return () => {
       cancelado = true;
     };
   }, [palavra]);
 
   useEffect(() => {
-    const raiz = document.documentElement;
-    if (!modo) return;
-    raiz.dataset.fita = modo.tipo === "3d" ? (pronta ? "3d" : "testando") : `estatico:${modo.motivo}`;
+    if (modo) document.documentElement.dataset.fita = pronta ? modo.motor : "carregando";
   }, [modo, pronta]);
 
-  if (!modo || modo.tipo === "estatico") return null;
+  if (!modo) return null;
 
   return (
     <div
@@ -89,11 +110,13 @@ export function CenaLoader({ palavra }: { palavra: string }) {
         pronta ? "opacity-100" : "opacity-0"
       }`}
     >
-      <Cena
-        movel={modo.movel}
-        texto={modo.texto}
-        aoCarregar={() => setPronta(true)}
-      />
+      {modo.motor === "3d" ? (
+        <SeFalhar aoFalhar={() => setModo({ ...modo, motor: "2d" })}>
+          <Cena movel={modo.movel} texto={modo.texto} aoCarregar={aoPronto} />
+        </SeFalhar>
+      ) : (
+        <ParticulasPlano movel={modo.movel} texto={modo.texto} aoPronto={aoPronto} />
+      )}
     </div>
   );
 }

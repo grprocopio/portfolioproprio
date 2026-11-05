@@ -242,6 +242,7 @@ p {
     0 0 80px rgb(75 91 255 / 0.35);
   transition: opacity 1s var(--ease-suave);
 }
-html[data-fita="3d"] .nome-estatico {
+html[data-fita="3d"] .nome-estatico,
+html[data-fita="2d"] .nome-estatico {
   opacity: 0;
 }
