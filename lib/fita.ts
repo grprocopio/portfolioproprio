@@ -31,7 +31,7 @@ function anel(i: number, n: number, vp: Viewport, perto: boolean): Pose {
   const R = clamp(Math.min(vp.w * 0.62, vp.h * 0.7), 1.6, 4.5);
   const a = (i / n) * TAU;
   const rot = perto ? new Euler(-0.35, 0.65, 0.4) : new Euler(-1.12, 0, 0.08);
-  const centro = perto ? new Vector3(0, -vp.h * 0.12, 2.6) : new Vector3(0, -vp.h * 0.5, -1.2);
+  const centro = perto ? new Vector3(0, -vp.h * 0.12, 2.6) : new Vector3(0, -vp.h * 0.6, -1.2);
   const ponto = new Vector3(R * Math.cos(a), R * Math.sin(a), 0).applyEuler(rot).add(centro);
   const tangente = new Vector3(-Math.sin(a), Math.cos(a), 0).applyEuler(rot);
   const radial = new Vector3(Math.cos(a), Math.sin(a), 0).applyEuler(rot);

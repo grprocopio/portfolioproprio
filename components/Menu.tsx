@@ -13,6 +13,14 @@ const links = [
 export function Menu() {
   const [aberto, setAberto] = useState(false);
   const [ativo, setAtivo] = useState<string | null>(null);
+  const [rolou, setRolou] = useState(false);
+
+  useEffect(() => {
+    const aoRolar = () => setRolou(window.scrollY > 24);
+    aoRolar();
+    window.addEventListener("scroll", aoRolar, { passive: true });
+    return () => window.removeEventListener("scroll", aoRolar);
+  }, []);
 
   // Marca no menu a seção visível no momento
   useEffect(() => {
@@ -37,7 +45,9 @@ export function Menu() {
   }, [aberto]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ease-suave ${rolou ? "bg-fundo/70 backdrop-blur-md" : ""}`}
+    >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-8">
         <a href="#topo" className="titulo text-2xl" aria-label={`${site.nome}, voltar ao início`}>
           {site.marca}

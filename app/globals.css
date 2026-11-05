@@ -88,7 +88,7 @@ body {
 }
 .titulo em {
   font-style: italic;
-  padding-right: 0.06em;
+  padding-right: 0.02em;
 }
 
 p {
@@ -115,5 +115,27 @@ p {
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+  }
+}
+
+/* Entrada da primeira dobra: o único momento orquestrado no carregamento */
+.entrada {
+  opacity: 0;
+  animation: entrada 900ms var(--ease-suave) forwards;
+}
+@keyframes entrada {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .entrada {
+    opacity: 1;
+    animation: none;
   }
 }
