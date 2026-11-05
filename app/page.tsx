@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import { Menu } from "@/components/Menu";
+import { ProjetosProprios, ProjetosPropriosCarregando } from "@/components/sections/ProjetosProprios";
 import { RolagemSuave } from "@/components/RolagemSuave";
 import { Hero } from "@/components/sections/Hero";
 import { ProjetosVendidos } from "@/components/sections/ProjetosVendidos";
@@ -7,6 +9,8 @@ import { site } from "@/data/site";
 import { CenaLoader } from "@/components/three/CenaLoader";
 import { resumo } from "@/lib/projetos";
 import { carregarProjetos, temExemplos } from "@/lib/projetos-servidor";
+
+export const revalidate = 3600;
 
 export default function Home() {
   const projetos = carregarProjetos();
@@ -23,6 +27,9 @@ export default function Home() {
         <Hero entregues={r.quantidade} desde={desde} />
         <Sobre resumo={r} exemplos={temExemplos} />
         <ProjetosVendidos projetos={projetos} modo={site.modoValores} exemplos={temExemplos} />
+        <Suspense fallback={<ProjetosPropriosCarregando />}>
+          <ProjetosProprios />
+        </Suspense>
         <section id="contato" className="min-h-[150svh]" />
       </main>
     </>
