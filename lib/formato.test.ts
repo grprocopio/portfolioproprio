@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { lerValorBR, nomeDoLink, normalizarLink, saldo, type Ganho } from "./ganhos";
+import { dataValida, lerValorBR, nomeDoLink, normalizarLink } from "./formato";
 
 describe("lerValorBR", () => {
   it("aceita os jeitos comuns de escrever um valor em reais", () => {
@@ -49,21 +49,23 @@ describe("nomeDoLink", () => {
   });
 });
 
-describe("saldo", () => {
-  const g = (valor: number): Ganho => ({ id: String(valor), link: "https://a.com", nome: "A", valor, criadoEm: "2026-11-05" });
-
-  it("soma os valores", () => {
-    expect(saldo([g(4850), g(12380.5)])).toBe(17230.5);
+describe("dataValida", () => {
+  it("aceita AAAA-MM-DD de um dia que existe", () => {
+    expect(dataValida("2026-11-05")).toBe(true);
+    expect(dataValida("2024-02-29")).toBe(true);
   });
 
-  it("sem projetos, saldo zero", () => {
-    expect(saldo([])).toBe(0);
+  it("recusa formatos errados e dias que não existem", () => {
+    expect(dataValida("")).toBe(false);
+    expect(dataValida("05/11/2026")).toBe(false);
+    expect(dataValida("2026-02-30")).toBe(false);
+    expect(dataValida("2026-13-01")).toBe(false);
   });
 });
 
 describe("printUrl", () => {
   it("gera o print do site com o endereço codificado", async () => {
-    const { printUrl } = await import("./ganhos");
+    const { printUrl } = await import("./formato");
     const u = printUrl("https://a.com/x?y=1");
     expect(u).toContain(encodeURIComponent("https://a.com/x?y=1"));
     expect(u).toContain("screenshot=true");

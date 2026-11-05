@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Kanit } from "next/font/google";
 import "./globals.css";
-import { site } from "@/data/site";
 
 const kanit = Kanit({
   subsets: ["latin", "latin-ext"],
@@ -11,16 +10,9 @@ const kanit = Kanit({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  title: "Procopio | Desenvolvedor de sites",
-  description: site.descricao,
-  openGraph: {
-    title: "Procopio | Desenvolvedor de sites",
-    description: site.descricao,
-    type: "website",
-    locale: "pt_BR",
-  },
-  twitter: { card: "summary_large_image" },
+  title: "CRM Procopio",
+  description: "Controle financeiro dos projetos.",
+  robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
@@ -33,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <a
           href="#conteudo"
-          className="fixed left-4 top-4 z-[70] -translate-y-24 rounded-full bg-white px-4 py-2 text-sm font-medium text-fundo transition-transform duration-300 focus:translate-y-0"
+          className="fixed left-4 top-4 z-[70] -translate-y-24 rounded-full bg-white px-4 py-2 text-sm font-medium text-fundo transition-transform duration-300 focus-visible:translate-y-0"
         >
           Pular para o conteúdo
         </a>

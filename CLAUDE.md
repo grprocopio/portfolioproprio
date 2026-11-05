@@ -4,7 +4,7 @@ Leia este arquivo inteiro antes de qualquer tarefa. Ele guarda as decisões já 
 
 ## Objetivo
 
-Portfólio pessoal de desenvolvedor freelancer. Mostra os sites/projetos que vendi para clientes, quanto faturei com eles e meus projetos do GitHub e da Vercel. Serve para atrair novos clientes.
+**Desde 2026-11-05: CRM financeiro pessoal** do Guilherme (desenvolvedor freelancer). Controla os projetos vendidos, quanto já recebeu e quanto falta receber. Uso só dele, atrás de senha. (Antes era um portfólio público; as decisões antigas ficam no histórico abaixo.)
 
 ## Método de trabalho (obrigatório)
 
@@ -16,34 +16,29 @@ Portfólio pessoal de desenvolvedor freelancer. Mostra os sites/projetos que ven
 
 ## Estilo visual
 
-**Layout de 2026-11-05 (substitui os anteriores, a pedido do usuário: "quero esse tipo de site").** Base: template de portfólio de criador 3D, adaptado em `docs/prompt-site-criador.md` (layout e animações do template; conteúdo, imagens e dados do Procopio — nenhuma imagem de terceiros).
-
-- **Cores do template:** fundo `#0C0C0C`, texto `#D7E2EA`, títulos em degradê `#646973 → #BBCCD7`, seção de serviços branca, botão "Fale comigo" em degradê roxo/laranja.
+- **Cores:** fundo `#0C0C0C`, texto `#D7E2EA`, títulos em degradê `#646973 → #BBCCD7`, botões principais em degradê roxo/laranja (`.botao-contato`), destaque `#d94bc8` (mês atual no gráfico, progresso). Situações: Pago verde `#8ff0b4`, Parcial amarelo `#ffd27a`, Pendente rosa `#ff8fa6`.
 - **Fonte:** Kanit (300 a 900).
-- **Personagem:** `public/personagem.webp` (personagem 3D do Procopio, gerado pelo usuário a partir da foto dele, fundo removido) no hero, com efeito magnético.
-- **Sem partículas e sem PROCOPIO girando** (escolha do usuário).
-- **Céu noturno atrás do site:** nuvens escuras deslizando e pontinhos de luz subindo (adaptado do céu do prompt "Driftlab", em versão noite).
-- **Animações:** Framer Motion (`motion`) + Lenis. Sempre ligadas (ver decisões).
+- **Fundo:** céu noturno (`components/CeuNoturno.tsx`): nuvens escuras deslizando e pontinhos de luz.
+- **Personagem:** `public/personagem.webp` como avatar no topo do painel e na tela de entrada.
+- **Animações sempre ligadas** (decisão do usuário).
 
-## Seções
+## Telas
 
-Site de uso pessoal (decisão do usuário de 2026-11-05: "vai ser só para mim").
-
-1. **Hero:** menu (Saldo, Projetos, Adicionar, Contato no WhatsApp), "PROCOPIO" gigante (PRO e PIO brancos atrás do personagem; CO só com contorno branco, na frente dele), frase curta, botão "Fale comigo", personagem magnético.
-2. **Ganhos:** "O que já ganhei" com o saldo total (soma das vendas, com contagem), cartões dos projetos (print automático, nome, link, valor, remover) e o formulário "Adicionar projeto" (link do site na Vercel + "Por quanto você vendeu?" + nome opcional).
-3. **Rodapé:** contato, redes, privacidade.
+1. **`/entrar`:** senha (`CRM_SENHA`).
+2. **`/` (painel):** "Olá, Guilherme" + Sair; indicadores Recebido (e recebido no mês), A receber, Faturamento, Ticket médio; gráfico "Recebido por mês" (12 meses); lista de projetos com filtro (Todos, A receber, Pagos), progresso, situação, e ações Registrar pagamento, Editar, Pagamentos (lista com remover), Excluir; janela "Novo projeto" (cliente, projeto, link opcional, valor total, data da venda, entrada opcional).
 
 ## Dados
 
-- **Stack:** Next.js (App Router) + Tailwind, deploy na Vercel.
-- **Projetos vendidos:** guardados no Upstash Redis (integração gratuita da Vercel; variáveis `KV_REST_API_URL`/`KV_REST_API_TOKEN` ou `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN`), hash `portfolio:ganhos`. Campos: `id`, `link`, `nome`, `valor`, `criadoEm`. Leitura e escrita só no servidor (`lib/armazem.ts`, server actions em `app/acoes.ts`); a página é dinâmica e o salvar revalida na hora. `ARMAZEM_MEMORIA=1` liga um banco em memória só para testes locais.
-- **Valores:** exatos, em reais (o usuário digita quanto vendeu). `lib/ganhos.ts` entende "4850", "4.850", "R$ 4.850,00".
-- **Sem senha:** o usuário decidiu que ninguém mais acessa; qualquer pessoa com o link pode adicionar/remover. Se isso mudar, proteger o formulário.
-- **Tokens:** só em variáveis de ambiente (Vercel). Nunca no código, nunca no cliente.
+- **Stack:** Next.js 16 (App Router) + Tailwind 4 + Upstash Redis, deploy na Vercel. Testes com Vitest (`npm test`).
+- **Projeto** (`lib/financeiro.ts`): `id`, `cliente`, `nome`, `link?`, `valor` (total), `data` (venda, AAAA-MM-DD), `pagamentos[]` (`id`, `valor`, `data`), `criadoEm`. Cálculos puros e testados: recebido, falta, situação, resumo, recebido por mês.
+- **Banco:** hash `crm:projetos` no Upstash (variáveis `KV_REST_API_URL`/`KV_REST_API_TOKEN`). `lib/armazem.ts` (só servidor). Projetos antigos de `portfolio:ganhos` migram uma vez como pagos. `ARMAZEM_MEMORIA=1` = banco em memória para testes locais.
+- **Acesso:** `CRM_SENHA` (obrigatória) e `CRM_SEGREDO` (opcional; sem ela, a assinatura usa a senha, e trocar a senha derruba as sessões). Cookie `crm_sessao` httpOnly, 30 dias, HMAC-SHA256 (`lib/sessao.ts`). Checagem em `proxy.ts` **e** de novo em cada página e server action (`lib/auth.ts`). Senha errada: atraso de 0,8 s. Páginas com `noindex`.
+- **Formatos:** `lib/formato.ts` entende valores "4850", "4.850", "R$ 4.850,00" e valida datas.
+- **Tokens e senha:** só em variáveis de ambiente da Vercel.
 
 ## Qualidade
 
-Estados de carregamento e erro (se uma API falhar, o resto do site continua funcionando), responsivo, acessível (contraste, foco visível, textos alternativos), carregamento rápido mesmo com o 3D.
+Estados de carregamento e erro (se uma API falhar, o resto do site continua funcionando), responsivo, acessível (contraste, foco visível, textos alternativos), carregamento rápido.
 
 ## Decisões tomadas
 
@@ -71,3 +66,4 @@ Estados de carregamento e erro (se uma API falhar, o resto do site continua func
 - **2026-11-05 — Instagram:** @guiprocopioo (https://www.instagram.com/guiprocopioo/), no rodapé com o ícone do Phosphor.
 - **2026-11-05 — Título do hero:** só "PROCOPIO" (pedido do usuário). Duas camadas sobrepostas com a mesma caixa: atrás do personagem, PRO e PIO brancos; na frente, só o CO em contorno branco (`.contorno-branco`). No celular o personagem sobe (topo a 7svh, 320 px) para a cabeça cruzar o CO.
 - **2026-11-05 — Céu noturno (pedido do usuário, do prompt "Driftlab", só as nuvens atrás do site, escuras como à noite):** `components/CeuNoturno.tsx`, fixo atrás de tudo. Nuvens: textura própria `public/ceu-noite.webp` (2048×1152, 15 KB, gerada por ruído espectral periódico, então emenda nas laterais; a imagem do prompt era de terceiros e de dia), deslizando `rolagem*.05 + tempo*.0022` voltas, como no prompt. 30 pontinhos de luz brancos subindo `.012*(.4+z)`. Só `transform` (sem WebGL, sem canvas): medido 60 fps no computador e no celular. Água-viva, palavras curvas, som e índice do prompt ficaram de fora.
+- **2026-11-05 — CRM financeiro (pedido do usuário: "transforme tipo em um CRM"; escolheu só o módulo Financeiro, site inteiro vira o CRM, com senha):** substitui hero/ganhos/rodapé públicos. Painel com recebido, a receber, faturamento, ticket médio, gráfico de recebimentos por mês e lista de projetos (cliente, projeto, link, valor, pagamentos/parcelas, situação Pago/Parcial/Pendente). Login por senha (`CRM_SENHA` na Vercel), cookie assinado com HMAC; checagem no `proxy.ts` e de novo em cada página e server action. Dados no mesmo Upstash (`crm:projetos`); os antigos `portfolio:ganhos` são migrados como pagos. Céu noturno, Kanit e o personagem (avatar) continuam.

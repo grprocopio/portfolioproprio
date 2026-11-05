@@ -2,40 +2,53 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type Props = {
-  valor: number;
-  formato: "moeda" | "numero";
-  /** Texto pronto para quando o valor não deve aparecer exato (modo faixa) */
-  textoFixo?: string;
-};
+type Props = { valor: number; formato: "moeda" | "numero" };
 
 const moeda = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 const numero = new Intl.NumberFormat("pt-BR");
 
-/** Conta de zero até o valor quando aparece na tela, uma vez só. */
-export function Contador({ valor, formato, textoFixo }: Props) {
+/**
+ * Na primeira vez que aparece na tela, conta de zero até o valor.
+ * Depois, quando o valor muda (novo pagamento, edição), vai direto do valor antigo ao novo,
+ * sem voltar a zero nem esperar o cartão reaparecer: o número na tela está sempre certo.
+ */
+export function Contador({ valor, formato }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
   const [atual, setAtual] = useState(valor);
+  const mostrado = useRef(valor);
+  const jaContou = useRef(false);
   const fmt = formato === "moeda" ? moeda : numero;
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el || textoFixo) return;
-    setAtual(0);
     let raf = 0;
+    const animar = (de: number, ate: number, duracao: number) => {
+      cancelAnimationFrame(raf);
+      const inicio = performance.now();
+      const passo = (agora: number) => {
+        const t = Math.min(1, (agora - inicio) / duracao);
+        const suave = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+        mostrado.current = de + (ate - de) * suave;
+        setAtual(Math.round(mostrado.current));
+        if (t < 1) raf = requestAnimationFrame(passo);
+      };
+      raf = requestAnimationFrame(passo);
+    };
+
+    if (jaContou.current) {
+      animar(mostrado.current, valor, 700);
+      return () => cancelAnimationFrame(raf);
+    }
+
+    const el = ref.current;
+    if (!el) return;
+    mostrado.current = 0;
+    setAtual(0);
     const obs = new IntersectionObserver(
       ([e]) => {
         if (!e.isIntersecting) return;
         obs.disconnect();
-        const inicio = performance.now();
-        const duracao = 1800;
-        const passo = (agora: number) => {
-          const t = Math.min(1, (agora - inicio) / duracao);
-          const suave = 1 - Math.pow(2, -10 * t);
-          setAtual(Math.round(valor * (t === 1 ? 1 : suave)));
-          if (t < 1) raf = requestAnimationFrame(passo);
-        };
-        raf = requestAnimationFrame(passo);
+        jaContou.current = true;
+        animar(0, valor, 1800);
       },
       { threshold: 0.6 },
     );
@@ -44,12 +57,12 @@ export function Contador({ valor, formato, textoFixo }: Props) {
       obs.disconnect();
       cancelAnimationFrame(raf);
     };
-  }, [valor, textoFixo]);
+  }, [valor]);
 
   return (
     <span ref={ref} className="tabular-nums">
-      <span aria-hidden="true">{textoFixo ?? fmt.format(atual)}</span>
-      <span className="sr-only">{textoFixo ?? fmt.format(valor)}</span>
+      <span aria-hidden="true">{fmt.format(atual)}</span>
+      <span className="sr-only">{fmt.format(valor)}</span>
     </span>
   );
 }

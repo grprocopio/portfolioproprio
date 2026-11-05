@@ -1,13 +1,3 @@
-/** Um projeto vendido: o site no ar e quanto rendeu. */
-export type Ganho = {
-  id: string;
-  link: string;
-  nome: string;
-  valor: number;
-  /** ISO 8601 */
-  criadoEm: string;
-};
-
 /**
  * Lê um valor em reais do jeito que a pessoa digitar.
  * "4850", "4.850", "4.850,00", "R$ 4.850,50", "4850.5". Devolve null se não for um valor positivo.
@@ -58,8 +48,6 @@ export function nomeDoLink(link: string): string {
   return host;
 }
 
-export const saldo = (ganhos: Pick<Ganho, "valor">[]) => Math.round(ganhos.reduce((s, g) => s + g.valor, 0) * 100) / 100;
-
 const real = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 export const formatarReal = (v: number) => real.format(v).replace(/,00$/, "");
 
@@ -75,3 +63,14 @@ export function printUrl(url: string): string {
   });
   return `https://api.microlink.io/?${qs}`;
 }
+
+/** Data no formato AAAA-MM-DD de um dia que existe (recusa 30/02). */
+export function dataValida(s: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  const [a, m, d] = s.split("-").map(Number);
+  const dt = new Date(Date.UTC(a, m - 1, d));
+  return dt.getUTCFullYear() === a && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d;
+}
+
+/** "2026-11-05" → "05/11/2026" */
+export const dataBR = (s: string) => s.split("-").reverse().join("/");

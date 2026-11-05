@@ -1,29 +1,38 @@
 import "server-only";
 import { Redis } from "@upstash/redis";
-import type { Ganho } from "./ganhos";
+import { migrarAntigo, type ProjetoAntigo, type Projeto } from "./financeiro";
 
-/** Onde os projetos ficam guardados. Só no servidor: as chaves do banco nunca vão para o navegador. */
+/** Onde os projetos do CRM ficam guardados. Só no servidor. */
 export type Armazem = {
-  listar(): Promise<Ganho[]>;
-  salvar(g: Ganho): Promise<void>;
+  listar(): Promise<Projeto[]>;
+  buscar(id: string): Promise<Projeto | null>;
+  salvar(p: Projeto): Promise<void>;
   remover(id: string): Promise<void>;
 };
 
-const CHAVE = "portfolio:ganhos";
+const CHAVE = "crm:projetos";
+const CHAVE_ANTIGA = "portfolio:ganhos";
 
 function redis(): Armazem | null {
-  // Nomes criados pela integração Upstash da Vercel (os dois formatos existem)
   const url = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN;
   if (!url || !token) return null;
   const r = new Redis({ url, token });
   return {
     async listar() {
-      const tudo = (await r.hgetall<Record<string, Ganho>>(CHAVE)) ?? {};
-      return Object.values(tudo);
+      const antigos = await r.hgetall<Record<string, ProjetoAntigo>>(CHAVE_ANTIGA);
+      if (antigos && Object.keys(antigos).length) {
+        const novos = Object.fromEntries(Object.values(antigos).map((g) => [g.id, migrarAntigo(g)]));
+        await r.hset(CHAVE, novos);
+        await r.del(CHAVE_ANTIGA);
+      }
+      return Object.values((await r.hgetall<Record<string, Projeto>>(CHAVE)) ?? {});
     },
-    async salvar(g) {
-      await r.hset(CHAVE, { [g.id]: g });
+    async buscar(id) {
+      return (await r.hget<Projeto>(CHAVE, id)) ?? null;
+    },
+    async salvar(p) {
+      await r.hset(CHAVE, { [p.id]: p });
     },
     async remover(id) {
       await r.hdel(CHAVE, id);
@@ -33,19 +42,14 @@ function redis(): Armazem | null {
 
 /** Só para testes locais (ARMAZEM_MEMORIA=1): some ao reiniciar o servidor. */
 function memoria(): Armazem {
-  const g = globalThis as unknown as { __ganhos?: Map<string, Ganho> };
-  g.__ganhos ??= new Map();
-  const m = g.__ganhos;
+  const g = globalThis as unknown as { __crm?: Map<string, Projeto> };
+  g.__crm ??= new Map();
+  const m = g.__crm;
   return {
-    async listar() {
-      return [...m.values()];
-    },
-    async salvar(x) {
-      m.set(x.id, x);
-    },
-    async remover(id) {
-      m.delete(id);
-    },
+    listar: async () => [...m.values()],
+    buscar: async (id) => m.get(id) ?? null,
+    salvar: async (p) => void m.set(p.id, structuredClone(p)),
+    remover: async (id) => void m.delete(id),
   };
 }
 
