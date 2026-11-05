@@ -16,33 +16,34 @@ Portfólio pessoal de desenvolvedor freelancer. Mostra os sites/projetos que ven
 
 ## Estilo visual
 
-Referência: vídeo de um site de agência (prints em `referencias/`). Usar como **inspiração de estilo**: não copiar marca, textos nem design literal.
+**Redesenho de 2026-11-05 (substitui o estilo anterior, a pedido do usuário: "muito travado, sem cor").** Referência nova: vídeo de um site de segurança digital com partículas neon (inspiração de estilo, não copiar marca, textos nem layout literal). Os prints antigos em `referencias/` ficam só como histórico.
 
-- **Paleta:** só preto, cinza e branco. Fundo ~#0a0a0a com leve vinheta e granulado. Sem cor de destaque; o brilho vem do 3D cromado.
-- **Tipografia:** títulos em serifada fina e condensada (ex.: Instrument Serif), grandes e centralizados, sempre com **uma palavra em itálico** por frase. Menu e textos em sans pequena (ex.: Inter), cinza claro.
-- **Botões:** pílula branca com ícone de seta dentro de um círculo preto.
-- **Menu fixo:** logo à esquerda, links no centro, botão "Fale comigo" à direita.
-- **Objeto 3D:** fita metálica cromada com gomos (anel/mola), material espelhado em preto e branco, iluminação de estúdio. O mesmo objeto atravessa a página toda.
+- **Paleta:** fundo azul marinho quase preto, superfícies marinho, **um** destaque azul índigo neon `#4B5BFF` (com brilho), texto branco e azul acinzentado. Feixes de luz azuis estáticos atrás das seções; granulado leve.
+- **Tipografia:** uma sans só (Geist), pesada e com tracking negativo nos títulos. Sem serifada e sem itálico; o destaque de uma palavra por frase passa a ser pela cor.
+- **Botões:** pílula branca com seta dentro de um círculo índigo.
+- **Menu:** logo em cima à esquerda e "Fale comigo" em cima à direita; links numa pílula flutuante embaixo, centralizada.
+- **Objeto 3D:** nuvem de partículas azuis (um único `THREE.Points`, transformação feita no shader da GPU). O mesmo objeto atravessa a página toda.
+- **Fluidez:** meta de 60 fps em qualquer aparelho, medida também com renderização por software. Sem `backdrop-filter` por cima do 3D.
 
 ## Animação no scroll
 
 Stack: Three.js ou React Three Fiber + GSAP ScrollTrigger + Lenis (rolagem suave com inércia).
 
-1. **Hero** (`referencias/01-hero.jpg`): fita em arco atrás do título; ao rolar, gira e se aproxima da câmera.
-2. **Sobre** (`02-sobre-coluna-3d.jpg`): fita vira coluna em espiral fixa à direita (sticky) enquanto o texto passa à esquerda.
-3. **Projetos** (`03-grade-projetos.jpg`): coluna vai para o lado; cards escuros sobem em parallax com velocidades diferentes.
-4. **CTA final** (`04-cta-tunel.jpg`): câmera entra num túnel em espiral com uma esfera cromada no centro.
+1. **Hero:** as partículas montam o nome PROCOPIO.
+2. **Sobre:** o nome se desfaz e as partículas viram uma espiral (tipo DNA) à direita enquanto o texto passa à esquerda.
+3. **Projetos:** a espiral se abre numa nuvem mais apagada; cards escuros sobem em parallax com velocidades diferentes.
+4. **CTA final:** as partículas formam um túnel em espiral com uma esfera no centro.
 
 Respeitar `prefers-reduced-motion` (versão estática). No mobile, 3D mais leve ou vídeo em loop.
 
 ## Seções
 
-1. **Hero:** só a palavra "PROCOPIO" em tipografia cinética girando (decisão de 2026-11-05, substitui o título, subtítulo e botões).
+1. **Hero:** o nome PROCOPIO formado pelas partículas azuis (o texto real fica oculto no `<h1>` para leitores de tela e SEO).
 2. **Sobre + Resultados:** texto curto sobre mim; números animados (contagem ao aparecer) de faturamento total, projetos entregues e ticket médio; gráfico de faturamento por mês, monocromático.
 3. **Projetos vendidos:** grade de cards escuros com print do site, nome, tipo e valor; filtro por tipo; clique abre detalhe (stack, prazo, link no ar, depoimento).
 4. **Projetos próprios:** puxados do GitHub e da Vercel, com print gerado automaticamente.
 5. **CTA final:** "Pronto para *tirar* seu projeto do papel?" + botão para o WhatsApp.
-6. **Rodapé:** contato e redes.
+6. **Rodapé:** PROCOPIO em tipografia cinética girando (movido do topo), contato e redes.
 
 ## Dados
 
@@ -73,3 +74,4 @@ Estados de carregamento e erro (se uma API falhar, o resto do site continua func
 - **Verificação:** local com Playwright (SwiftShader, sem GPU: FPS medido não vale) + prévia da Vercel.
 - **2026-11-05 — Desempenho (usuário relatou animação travada e INP de 352 ms):** medições mostraram que todo o custo era o canvas 3D; num Chrome sem aceleração de hardware a página caía para ~2 fps. Decisões: (1) 3D renderiza sob demanda (`frameloop="demand"`), só quando a fase do scroll ou o ponteiro mudam: com a página parada, custo zero; (2) WebGL por software é detectado num contexto descartável antes de montar a cena → imagem estática (`public/fita-anel*.webp`, gerada da própria cena); (3) aquecimento de 30 quadros no estado mais pesado (túnel), com o canvas invisível, medindo o custo real (render + `readPixels`) → se a mediana for alta (`lib/desempenho.ts`), troca pela imagem antes de mostrar o 3D; uma vigia continua medindo durante o uso; (4) resolução fixa (máx. 1,5 no desktop, 1,25 no celular), sem `PerformanceMonitor` (redimensionar no meio da rolagem engasgava); (5) lâminas com 108 triângulos (antes 300), shaders pré-compilados; (6) PROCOPIO com camadas do tamanho da fatia. `?fita=3d` força o 3D para testes. Resultado medido no pior caso (renderização por software): 60 fps parado e rolando a página inteira.
 - **2026-11-05 — Hero:** pedido do usuário: no lugar de título/subtítulo/botões, só "PROCOPIO" girando no estilo da referência enviada (palavra fatiada que torce em torno de um eixo horizontal; frente preenchida, verso só contorno). Fonte larga Archivo (wdth 125, peso 800), só nessa palavra. CSS 3D puro (`components/PalavraGiratoria.tsx`), sem JS por quadro. A faixa vermelha da referência ficou de fora: paleta continua só preto/cinza/branco. Com movimento reduzido, a palavra fica parada. O `<h1>` mantém um texto oculto para leitores de tela e SEO.
+- **2026-11-05 — Redesenho (substitui paleta, tipografia, objeto 3D e posição do PROCOPIO girando):** escolhas do usuário: partículas formam o nome no topo e depois espiral → nuvem → túnel; PROCOPIO girando vai para o fim da página; destaque índigo `#4B5BFF`. A fita cromada (`Fita.tsx`, `lib/fita.ts`) é substituída pelo motor de partículas. Conflitos com as skills de design (fundo marinho tingido, cor azul, brilhos): o pedido do usuário vence.
